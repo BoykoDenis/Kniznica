@@ -1,0 +1,4 @@
+php_flag  log_errors on
+php_flag  display_errors off
+php_value error_log G:\Store\PHP\GroupProjectExperiment\api-test\log\php_err.log
+#php_value error_log /home/log/php_err.log
