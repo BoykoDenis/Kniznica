@@ -90,8 +90,6 @@ RUN { \
 # Set working directory
 WORKDIR /var/www
 
-USER $user
-
 # Create app directory
 RUN mkdir -p /var/www/src
 RUN mkdir -p /var/www/config
@@ -102,6 +100,14 @@ COPY ./src /var/www/src
 COPY ./config.docker /var/www/config
 COPY ./composer.json /var/www/
 COPY ./composer.lock /var/www/
+
+# switching to user issues the permission error
+# so we commented it temporary
+# possible solutions
+# - leave as is (possible remove adding user at all - section at line 47)
+# - change permission of /var/www/ directory
+# - move application to user home directory
+# USER ${user:-app}
 
 RUN composer install
 
