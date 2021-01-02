@@ -13,6 +13,7 @@ use Enm\JsonApi\Model\Resource\Link\LinkCollection;
 use Enm\JsonApi\Model\Resource\Link\LinkCollectionInterface;
 use Enm\JsonApi\Model\Resource\Relationship\RelationshipCollection;
 use Enm\JsonApi\Model\Resource\Relationship\RelationshipCollectionInterface;
+use Enm\JsonApi\Model\Resource\Relationship\Relationship;
 
 /**
  * @author Serge Boyko <s.boyko@gmail.com>
@@ -87,15 +88,7 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
      */
     public function load( $data ): ResourceInterface
     {
-        if ( $data->relationship() )
-        {
-            if ($data->type() !== $this->type )
-            {
-                throw new \InvalidArgumentException('Invalid data type given! '.$data->type()." !== {$this->type}");
-            }
-            return $this->loadRelationship( $data );
-        }
-        elseif ( $data instanceof RequestInterface )
+        if ( $data instanceof RequestInterface )
         {
             if ( $data->type() !== $this->type )
             {
@@ -213,7 +206,7 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
         return $this;
     }
 
-    protected function load_relationship( RequestInterface $request )
+    public function load_relationship( RequestInterface $request )
     {
         if ( $request->relationship() == 'relationships' )
         {
@@ -223,8 +216,24 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
         elseif ( $request->relationship() == 'authorbook')
         {
             if ($this->type() == 'authors') $rel = 'books';
-            elseif ($this->type() == 'books') $rels = 'authors';
+            elseif ($this->type() == 'books') $rel = 'authors';
             else echo 'wrong relationship name';
+            $this->loadById( $request->id() );
+
+            $related = $this->getRelatedIDs( $request->relationship(), $request->id(), 'aid', 'bid' );
+            $related = $this->createCollection('books', $related);
+            foreach($related as $rel)
+            {
+                //echo $request->id().'->'.$rel->id();
+                $rel = new Relationship( $request->id().'->'.$rel->id(), $rel );
+                $this->relationshipCollection->set($rel);
+            }
+
+            //print_r($this->relationships());
+
+            //$bookres = new BookResource($request->relationship(), $request->id(), 'aid', 'bid');
+
+
             //$request->type() ==> main
             //secondone from relation ship goes as a relationship to the main one
         }
@@ -241,6 +250,32 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
 
         }
     }
+
+    protected function getRelatedIDs( string $relationshipname, string $mainID, string $mainIDname, string $relatedIDname )
+    {
+        $db = new App();
+        $req = " SELECT ".$relatedIDname." FROM ".$relationshipname." WHERE ".$mainIDname."=".$mainID;
+        $query = $db::$dbh->prepare( $req );
+        $query->execute();
+        while ($row = $query->fetch(\PDO::FETCH_ASSOC))
+        {
+            $rels[] = $row['bid'];
+        }
+        return $rels;
+
+    }
+
+    public function createCollection(string $tabel, array $ids)
+	{
+		$db = new App();
+		foreach($ids as $id)
+		{
+			$res = new BookResource();
+			$res->loadById( $id );
+			$rels[] = $res;
+		}
+		return $rels;
+	}
 
     /**
      * @return string

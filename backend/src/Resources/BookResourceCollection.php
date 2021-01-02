@@ -41,8 +41,8 @@ class BookResourceCollection extends AbstractResourceCollection
 			//echo get_type($query);
 		}
 		$query->execute();
+		$tcnt = $cnt = 0;
 
-			$tcnt = $cnt = 0;
 		while($row = $query->fetch(\PDO::FETCH_ASSOC))
 		{
 			$tcnt++;
@@ -66,9 +66,8 @@ class BookResourceCollection extends AbstractResourceCollection
     public function countTotal( ): int
     {
         // gather data from DB and generate the collection
-    		$dbdata = include(__DIR__.'/../../temp/Authors.data.php');
+    	$dbdata = include(__DIR__.'/../../temp/Authors.data.php');
 
         return \count($dbdata);
-    }
-
+	}
 }
