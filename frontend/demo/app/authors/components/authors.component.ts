@@ -18,7 +18,7 @@ export class AuthorsComponent {
                 .all({
                     include: ['books'],
                     sort: ['name'],
-                    page: { number: page || 1 },
+                    page: { number: page || 1, size: 5 },
                     ttl: 3600
                 })
                 .subscribe(
