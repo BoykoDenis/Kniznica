@@ -1,0 +1,12 @@
+[Sat Jan 02 17:15:06.314856 2021] [mpm_prefork:notice] [pid 1] AH00163: Apache/2.4.38 (Debian) configured -- resuming normal operations
+[Sat Jan 02 17:15:06.315601 2021] [core:notice] [pid 1] AH00094: Command line: 'apache2 -D FOREGROUND'
+[Sat Jan 02 17:16:53.873927 2021] [mpm_prefork:notice] [pid 1] AH00170: caught SIGWINCH, shutting down gracefully
+[Sat Jan 02 17:17:16.346627 2021] [mpm_prefork:notice] [pid 1] AH00163: Apache/2.4.38 (Debian) configured -- resuming normal operations
+[Sat Jan 02 17:17:16.347157 2021] [core:notice] [pid 1] AH00094: Command line: 'apache2 -D FOREGROUND'
+[Sat Jan 02 17:19:03.498479 2021] [mpm_prefork:notice] [pid 1] AH00170: caught SIGWINCH, shutting down gracefully
+[Sat Jan 02 17:29:32.912250 2021] [mpm_prefork:notice] [pid 1] AH00163: Apache/2.4.38 (Debian) configured -- resuming normal operations
+[Sat Jan 02 17:29:32.913200 2021] [core:notice] [pid 1] AH00094: Command line: 'apache2 -D FOREGROUND'
+[Sat Jan 02 17:31:32.412536 2021] [mpm_prefork:notice] [pid 1] AH00170: caught SIGWINCH, shutting down gracefully
+[Sat Jan 02 17:32:09.803053 2021] [mpm_prefork:notice] [pid 1] AH00163: Apache/2.4.38 (Debian) configured -- resuming normal operations
+[Sat Jan 02 17:32:09.803546 2021] [core:notice] [pid 1] AH00094: Command line: 'apache2 -D FOREGROUND'
+[Sat Jan 02 17:32:30.301984 2021] [mpm_prefork:notice] [pid 1] AH00170: caught SIGWINCH, shutting down gracefully

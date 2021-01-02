@@ -1,0 +1,7 @@
+.git
+.idea
+.env.prod
+config
+public
+log
+docker-compose
