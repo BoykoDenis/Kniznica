@@ -88,15 +88,7 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
      */
     public function load( $data ): ResourceInterface
     {
-        if ( $data->relationship() )
-        {
-            if ($data->type() !== $this->type )
-            {
-                throw new \InvalidArgumentException('Invalid data type given! '.$data->type()." !== {$this->type}");
-            }
-            return $this->loadRelationship( $data );
-        }
-        elseif ( $data instanceof RequestInterface )
+        if ( $data instanceof RequestInterface )
         {
             if ( $data->type() !== $this->type )
             {
