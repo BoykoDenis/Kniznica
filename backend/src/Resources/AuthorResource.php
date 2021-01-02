@@ -50,7 +50,7 @@ class AuthorResource extends AbstractResource
         $query->bindParam(":id", $id);
         $query->execute();
         $dbdata = $query->fetch(\PDO::FETCH_ASSOC);
-        echo $this->id();
+        //echo $this->id();
 
         return $this->loadByArray( $dbdata );
     }
@@ -106,9 +106,11 @@ class AuthorResource extends AbstractResource
             throw new \Exception('Deletion Failed: '. $e->getMessage());
         }
     }
-    protected function loadRelationship( $request )
+
+    protected function loadRelationship_out( $request )
     {
         //string $id, string $type, string $name
+        echo 'here';
         $db = new App();
         $this->loadById( $request->id());
         if ( $request->relationship() == 'relationships' )

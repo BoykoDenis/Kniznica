@@ -117,7 +117,6 @@ class AuthorHandler implements RequestHandlerInterface
         $resource = new AuthorResource();
         //echo gettype($request->requestBody()->data());
         $resource->load_relationship( $request );
-
         $document = new AuthorDocument($resource, $request);
 
         return new \Enm\JsonApi\Model\Response\DocumentResponse($document);
