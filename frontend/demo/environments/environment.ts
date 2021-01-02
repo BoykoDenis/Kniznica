@@ -5,5 +5,5 @@
 
 export const environment = {
     production: false,
-    jsonapi_url: '//jsonapiplayground.reyesoft.com/v2/'
+    jsonapi_url: '//localhost/api.php/'
 };
