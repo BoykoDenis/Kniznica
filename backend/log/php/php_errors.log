@@ -1,9 +1,0 @@
-[02-Jan-2021 17:15:44 UTC] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 4096 bytes) in /var/www/html/api.php on line 5
-[02-Jan-2021 17:17:22 UTC] PHP Notice:  Undefined index: HTTP_ORIGIN in /var/www/src/api.php on line 58
-[02-Jan-2021 17:17:22 UTC] PHP Notice:  Undefined index: HTTP_ACCESS_CONTROL_REQUEST_HEADERS in /var/www/src/api.php on line 59
-[02-Jan-2021 17:30:01 UTC] PHP Notice:  Undefined index: HTTP_ORIGIN in /var/www/src/api.php on line 58
-[02-Jan-2021 17:30:02 UTC] PHP Notice:  Undefined index: HTTP_ACCESS_CONTROL_REQUEST_HEADERS in /var/www/src/api.php on line 59
-[02-Jan-2021 17:30:07 UTC] PHP Notice:  Undefined index: HTTP_ORIGIN in /var/www/src/api.php on line 58
-[02-Jan-2021 17:30:07 UTC] PHP Notice:  Undefined index: HTTP_ACCESS_CONTROL_REQUEST_HEADERS in /var/www/src/api.php on line 59
-[02-Jan-2021 17:32:16 UTC] PHP Notice:  Undefined index: HTTP_ORIGIN in /var/www/src/api.php on line 58
-[02-Jan-2021 17:32:16 UTC] PHP Notice:  Undefined index: HTTP_ACCESS_CONTROL_REQUEST_HEADERS in /var/www/src/api.php on line 59
