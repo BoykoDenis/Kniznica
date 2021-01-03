@@ -22,11 +22,17 @@ Run docker compose with the following parameters to build container cluster in d
 ```bash
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
+#### Front-end
+
+Access to front-end API: http://localhost:4200
+
 #### Back-end
 
 Docker mount application directory to .docker/backend/src directory.
 So you can modify files in this directory - the changes will appear
 in docker container immediately.
+
+Access to back-end API: http://localhost/api.php
 
 #### Database
 
