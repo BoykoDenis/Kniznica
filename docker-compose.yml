@@ -12,7 +12,7 @@ services:
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
-      - ./.docker/mysql:/docker-entrypoint-initdb.d
+      - ./.docker/mysql/initdb:/docker-entrypoint-initdb.d
     ports:
       - "3306:3306"
     networks:
@@ -28,8 +28,6 @@ services:
     working_dir: /app
     ports:
       - "80:80"
-    volumes:
-      - ./backend/log:/usr/local/log
     networks:
       - kniznica-appnet
 

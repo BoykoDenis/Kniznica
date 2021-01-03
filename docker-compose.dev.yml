@@ -1,0 +1,11 @@
+version: "3.7"
+services:
+  db.srv:
+    volumes:
+      - ./.docker/mysql.dev/initdb:/docker-entrypoint-initdb.d
+      - ./.docker/mysql.dev/storage:/var/lib/mysql
+
+  backend.srv:
+    volumes:
+      - ./backend/log:/usr/local/log
+      - ./backend/src:/var/www/src
