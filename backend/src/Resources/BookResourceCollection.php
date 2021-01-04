@@ -21,6 +21,14 @@ class BookResourceCollection extends AbstractResourceCollection
     /**
      * @return ResourceCollectionInterface
      */
+
+	public function __construct(array $data = [])
+	{
+		parent::__construct( $data );
+		//print_r($data);
+	}
+
+
     protected function loadFromDB( string $where = ''): ResourceCollectionInterface
     {
         // gather data from DB and generate the collection

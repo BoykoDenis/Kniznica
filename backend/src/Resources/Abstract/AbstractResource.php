@@ -208,27 +208,36 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
 
     public function load_relationship( RequestInterface $request )
     {
+        $relationsIDnames = array
+        (
+            'books'=>'bid',
+            'authors'=>'aid',
+            'genres'=>'gid',
+            'users'=>'uid'
+        );
         if ( $request->relationship() == 'relationships' )
         {
             //$req = 'SELECT * FROM '.$name.' WHERE aid=?';
             echo 'easter egg';
         }
-        elseif ( $request->relationship() == 'authorbook')
+        elseif ( $request->relationship() == 'authorbook' )
         {
-            if ($this->type() == 'authors') $rel = 'books';
-            elseif ($this->type() == 'books') $rel = 'authors';
+            if ( $this->type() == 'authors' ) $relname = 'books';
+            elseif ( $this->type() == 'books' ) $relname = 'authors';
             else echo 'wrong relationship name';
             $this->loadById( $request->id() );
 
-            $related = $this->getRelatedIDs( $request->relationship(), $request->id(), 'aid', 'bid' );
-            $related = $this->createCollection('books', $related);
-            foreach($related as $rel)
-            {
-                //echo $request->id().'->'.$rel->id();
-                $rel = new Relationship( $request->id().'->'.$rel->id(), $rel );
-                $this->relationshipCollection->set($rel);
-            }
+            $related = $this->getRelatedIDs( $request->relationship(), // relationship name
+                                             $request->id(), // main ID
+                                             $relationsIDnames[ $this->type() ], // main object IDname
+                                             $relationsIDnames[ $relname ]); // related object IDname
 
+            $related = $this->createCollection( $relname, $related );
+
+            $related = new BookResourceCollection( $related );
+            $rel = new Relationship( $relname, $related );
+            $this->relationshipCollection->set( $rel );
+            //print_r($this);
             //print_r($this->relationships());
 
             //$bookres = new BookResource($request->relationship(), $request->id(), 'aid', 'bid');
@@ -265,17 +274,25 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
 
     }
 
-    public function createCollection(string $tabel, array $ids)
+    public function createCollection(string $type, array $ids)
 	{
-		$db = new App();
-		foreach($ids as $id)
-		{
-			$res = new BookResource();
-			$res->loadById( $id );
-			$rels[] = $res;
-		}
-		return $rels;
-	}
+        $db = new App();
+
+        if ( $type == 'books' )
+        {
+            foreach($ids as $id)
+            {
+                $res = new BookResource();
+                $res->loadById( $id );
+                $rels[] = $res;
+            }
+            return $rels;
+        }
+        elseif ( $type == 'authors' )
+        {
+            echo 'not yet';
+        }
+    }
 
     /**
      * @return string

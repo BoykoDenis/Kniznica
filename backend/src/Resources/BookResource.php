@@ -103,4 +103,16 @@ class BookResource extends AbstractResource
             throw new \Exception('Deletion Failed: '. $e->getMessage());
         }
     }
+/*
+    protected function createByArray( array $ids )
+    {
+        foreach($ids as $id)
+		{
+			$res = new BookResource();
+			$res->loadById( $id );
+			$rels[] = $res;
+		}
+        return $rels;
+    }
+    */
 }
