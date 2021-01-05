@@ -16,11 +16,20 @@ class AuthorResourceCollection extends AbstractResourceCollection
     /**
      * @var string
      */
-    protected $type = 'authors';
+	protected $type = 'authors';
+
+
 
     /**
      * @return ResourceCollectionInterface
      */
+
+	public function __construct(array $data = [])
+	{
+		parent::__construct( $data );
+		//print_r($data);
+	}
+
     protected function loadFromDB( string $where = ''): ResourceCollectionInterface
     {
         // gather data from DB and generate the collection
@@ -66,9 +75,9 @@ class AuthorResourceCollection extends AbstractResourceCollection
     public function countTotal( ): int
     {
         // gather data from DB and generate the collection
-    		$dbdata = include(__DIR__.'/../../temp/Authors.data.php');
+    		//$dbdata = include(__DIR__.'/../../temp/Authors.data.php');
 
-        return \count($dbdata);
+        return 0;//\count($dbdata);
     }
 
 }

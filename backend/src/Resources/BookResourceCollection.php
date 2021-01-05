@@ -74,8 +74,8 @@ class BookResourceCollection extends AbstractResourceCollection
     public function countTotal( ): int
     {
         // gather data from DB and generate the collection
-    	$dbdata = include(__DIR__.'/../../temp/Authors.data.php');
+    	//$dbdata = include(__DIR__.'/../../temp/Books.data.php');
 
-        return \count($dbdata);
+        return 0;
 	}
 }

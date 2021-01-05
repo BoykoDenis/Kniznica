@@ -222,11 +222,12 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
         }
         elseif ( $request->relationship() == 'authorbook' )
         {
+            //echo 'here';
             if ( $this->type() == 'authors' ) $relname = 'books';
             elseif ( $this->type() == 'books' ) $relname = 'authors';
             else echo 'wrong relationship name';
             $this->loadById( $request->id() );
-
+            //echo $relname;
             $related = $this->getRelatedIDs( $request->relationship(), // relationship name
                                              $request->id(), // main ID
                                              $relationsIDnames[ $this->type() ], // main object IDname
@@ -234,7 +235,7 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
 
             $related = $this->createCollection( $relname, $related );
 
-            $related = new BookResourceCollection( $related );
+            //$related = new BookResourceCollection( $related );
             $rel = new Relationship( $relname, $related );
             $this->relationshipCollection->set( $rel );
             //print_r($this);
@@ -266,15 +267,16 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
         $req = " SELECT ".$relatedIDname." FROM ".$relationshipname." WHERE ".$mainIDname."=".$mainID;
         $query = $db::$dbh->prepare( $req );
         $query->execute();
+        $rels = [];
         while ($row = $query->fetch(\PDO::FETCH_ASSOC))
         {
-            $rels[] = $row['bid'];
+            $rels[] = $row[$relatedIDname];
         }
         return $rels;
 
     }
 
-    public function createCollection(string $type, array $ids)
+    public function createCollection(string $type, array $ids = [])
 	{
         $db = new App();
 
@@ -286,11 +288,17 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
                 $res->loadById( $id );
                 $rels[] = $res;
             }
-            return $rels;
+            return new BookResourceCollection( $rels ?: [] );
         }
         elseif ( $type == 'authors' )
         {
-            echo 'not yet';
+            foreach($ids as $id)
+            {
+                $res = new AuthorResource();
+                $res->loadById( $id );
+                $rels[] = $res;
+            }
+            return new AuthorResourceCollection( $rels ?: [] );
         }
     }
 
