@@ -45,11 +45,10 @@ class AuthorResource extends AbstractResource
         // Here add loading by id from DB
         // and the call $this->loadByArray with gather from DB data
         $db = new App();
-        $req = "SELECT * FROM authors WHERE id = :id";
-        $query = $db::$dbh->prepare($req);
-        $query->bindParam(":id", $id);
-        $query->execute();
-        $dbdata = $query->fetch(\PDO::FETCH_ASSOC);
+        $req = "SELECT * FROM authors WHERE id = ?";
+        $query = $db::$dbh->prepare( $req );
+        $query->execute( [$id] );
+        $dbdata = $query->fetch( \PDO::FETCH_ASSOC );
         //echo $this->id();
 
         return $this->loadByArray( $dbdata );
@@ -58,7 +57,6 @@ class AuthorResource extends AbstractResource
     protected function addToDB( $rawdata )
     {
 
-        //find better solution
         $db = new App();
         $req = "INSERT INTO authors (name, date_of_birth, date_of_death) VALUE (?, ?, ?)";
         $query = $db::$dbh->prepare($req);
@@ -66,7 +64,10 @@ class AuthorResource extends AbstractResource
         try
         {
             $query->execute( [$rawdata['name'], $rawdata['date_of_birth'], $rawdata['date_of_death']] );
+            $this->id = $db::$dbh->lastInsertId();
+            $this->loadById( $this->id );
         }
+
         catch (Exception $e)
         {
             $db::$dbh->rollback();

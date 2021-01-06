@@ -76,7 +76,8 @@ class AuthorHandler implements RequestHandlerInterface
         //print_r($request->requestBody()->data()->all()[0]->attributes());
         //$request = Server\JsonApiServer::createResponseBody($request);
         $resource->add($request->requestBody()->data()->all()[0]);
-
+        $document = new AuthorDocument($resource, $request);
+        //print_r($resource);
 //        $resource->add();
 
 
