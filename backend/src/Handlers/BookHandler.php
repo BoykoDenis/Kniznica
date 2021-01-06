@@ -67,7 +67,7 @@ class BookHandler implements RequestHandlerInterface
         //print_r($request->requestBody()->data()->all()[0]->attributes());
         //$request = Server\JsonApiServer::createResponseBody($request);
         $resource->add($request->requestBody()->data()->all()[0]);
-
+        $document = new BookDocument($resource, $request);
 //        $resource->add();
 
 
@@ -84,9 +84,6 @@ class BookHandler implements RequestHandlerInterface
     {
         $resource = new BookResource();
         $resource->edit($request->requestBody()->data()->all()[0]);
-
-
-//        $resource->save();
 
         $document = new BookDocument($resource, $request);
 

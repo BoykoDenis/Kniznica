@@ -43,10 +43,9 @@ class BookResource extends AbstractResource
         // Here add loading by id from DB
         // and the call $this->loadByArray with gather from DB data
         $db = new App();
-        $req = "SELECT * FROM books WHERE id = :id";
-        $query = $db::$dbh->prepare($req);
-        $query->bindParam(":id", $id);
-        $query->execute();
+        $req = "SELECT * FROM books WHERE id=?";
+        $query = $db::$dbh->prepare( $req );
+        $query->execute( [$id] );
         $dbdata = $query->fetch(\PDO::FETCH_ASSOC);
 
         return $this->loadByArray( $dbdata );
@@ -54,8 +53,7 @@ class BookResource extends AbstractResource
 
     protected function addToDB( $rawdata )
     {
-
-        //find better solution
+        print_r($rawdata);
         $db = new App();
         $req = "INSERT INTO books (title, date_published, isbn) VALUE (?, ?, ?)";
         $query = $db::$dbh->prepare($req);
@@ -63,6 +61,8 @@ class BookResource extends AbstractResource
         try
         {
             $query->execute( [$rawdata['title'], $rawdata['date_published'], $rawdata['isbn']] );
+            $this->id = $db::$dbh->lastInsertId();
+            $this->loadById( $this->id );
         }
         catch (Exception $e)
         {
@@ -76,9 +76,11 @@ class BookResource extends AbstractResource
         $db = new App();
         $req = 'UPDATE books SET title=?, date_published=?, isbn=? WHERE id=?';
         $query = $db::$dbh->prepare($req);
+        print_r([$rawdata['title'], $rawdata['date_published'], $rawdata['isbn'], $id]);
         try
         {
-            $query->execute( [$rawdata['name'], $rawdata['date_of_birth'], $rawdata['date_of_death'], $id]);
+            $query->execute( array($rawdata['title'], $rawdata['date_published'], $rawdata['isbn'], $id) );
+            $this->loadById( $id );
         }
         catch (Exception $e)
         {

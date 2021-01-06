@@ -51,7 +51,7 @@ class AuthorResource extends AbstractResource
         $dbdata = $query->fetch( \PDO::FETCH_ASSOC );
         //echo $this->id();
 
-        return $this->loadByArray( $dbdata );
+        return $this->loadByArray( $dbdata ) ?: null;
     }
 
     protected function addToDB( $rawdata )
@@ -67,7 +67,6 @@ class AuthorResource extends AbstractResource
             $this->id = $db::$dbh->lastInsertId();
             $this->loadById( $this->id );
         }
-
         catch (Exception $e)
         {
             $db::$dbh->rollback();
