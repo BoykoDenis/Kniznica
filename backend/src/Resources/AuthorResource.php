@@ -83,6 +83,7 @@ class AuthorResource extends AbstractResource
         try
         {
             $query->execute( [$rawdata['name'], $rawdata['date_of_birth'], $rawdata['date_of_death'], $id]);
+            $this->loadById( $id );
         }
         catch (Exception $e)
         {

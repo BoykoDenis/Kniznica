@@ -94,9 +94,6 @@ class AuthorHandler implements RequestHandlerInterface
     {
         $resource = new AuthorResource();
         $resource->edit($request->requestBody()->data()->all()[0]);
-        print_r($resource);
-
-//        $resource->save();
 
         $document = new AuthorDocument($resource, $request);
 
