@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { JsonapiCore } from 'ngx-jsonapi';
 
+// Add Forms
+import { FormControl } from '@angular/forms';
+
 @Component({
     selector: 'demo-app',
     styleUrls: ['./app.component.scss'],
