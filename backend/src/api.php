@@ -27,8 +27,12 @@ try {
     require_once(__DIR__."/App/App.php");
 
     // add your request handlers to the registry of the json api server
+
     $jsonApi->addHandler('authors', new AuthorHandler());
     $jsonApi->addHandler('books', new BookHandler());
+//  $jsonApi->addHandler('genres', new GenreHandler());
+//  $jsonApi->addHandler('users', new UserHandler());
+
     // create the json api request
     $request = new Request( $_SERVER['REQUEST_METHOD'],
         new \GuzzleHttp\Psr7\Uri($_SERVER['REQUEST_URI']),
@@ -58,6 +62,6 @@ function outCORSHeaders()
     header("Access-Control-Allow-Origin: ".$_SERVER["HTTP_ORIGIN"]);
     if ( $_SERVER["HTTP_ACCESS_CONTROL_REQUEST_HEADERS"] )
         header("Access-Control-Allow-Headers: ".$_SERVER["HTTP_ACCESS_CONTROL_REQUEST_HEADERS"]);
-    header("Access-Control-Allow-Methods: PUT, POST, GET, OPTIONS");
+        header("Access-Control-Allow-Methods: PUT, POST, PATCH, GET, OPTIONS");
     header("Access-Control-Max-Age: 1728000");
 }
