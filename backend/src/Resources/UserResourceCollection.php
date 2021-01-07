@@ -43,17 +43,11 @@ class UserResourceCollection extends AbstractResourceCollection
 			{
 				$this->offset = 0;
 			}
-
-			$req .= ' LIMIT ? OFFSET ?';
-			$query = $db::$dbh->prepare($req);
-			$query->execute([$this->limit(), $this->offset()]);
-		}
-		else
-		{
-			$query = $db::$dbh->prepare($req);
-			$query->execute();
+			$req .= ' LIMIT '.intval($this->limit).' OFFSET '.intval($this->offset);
 		}
 
+		$query = $db::$dbh->prepare($req);
+		$query->execute();
 
 		while($row = $query->fetch(\PDO::FETCH_ASSOC))
 		{
@@ -71,10 +65,12 @@ class UserResourceCollection extends AbstractResourceCollection
      */
     public function countTotal( ): int
     {
-        // gather data from DB and generate the collection
-    		//$dbdata = include(__DIR__.'/../../temp/Authors.data.php');
-
-        return 0;//\count($dbdata);
+        $db = new App();
+		$req = 'SELECT COUNT(*) FROM users';
+		$query = $db::$dbh->prepare($req);
+		$query->execute();
+		$total = $query->fetch(\PDO::FETCH_ASSOC);
+        return intval($total['COUNT(*)']);
     }
 
 }

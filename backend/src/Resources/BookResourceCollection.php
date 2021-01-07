@@ -42,16 +42,11 @@ class BookResourceCollection extends AbstractResourceCollection
 			{
 				$this->offset = 0;
 			}
+			$req .= ' LIMIT '.intval($this->limit).' OFFSET '.intval($this->offset);
+		}
 
-			$req .= ' LIMIT ? OFFSET ?';
-			$query = $db::$dbh->prepare($req);
-			$query->execute([$this->limit(), $this->offset()]);
-		}
-		else
-		{
-			$query = $db::$dbh->prepare($req);
-			$query->execute();
-		}
+		$query = $db::$dbh->prepare($req);
+		$query->execute();
 
 
 		while($row = $query->fetch(\PDO::FETCH_ASSOC))
@@ -68,11 +63,13 @@ class BookResourceCollection extends AbstractResourceCollection
     /**
      * @return integer
      */
-    public function countTotal( ): int
+	public function countTotal( ): int
     {
-        // gather data from DB and generate the collection
-    	//$dbdata = include(__DIR__.'/../../temp/Books.data.php');
-
-        return 0;
-	}
+		$db = new App();
+		$req = 'SELECT COUNT(*) FROM books';
+		$query = $db::$dbh->prepare($req);
+		$query->execute();
+		$total = $query->fetch(\PDO::FETCH_ASSOC);
+        return intval($total['COUNT(*)']);
+    }
 }

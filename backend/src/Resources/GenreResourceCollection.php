@@ -30,10 +30,12 @@ class GenreResourceCollection extends AbstractResourceCollection
 		//print_r($data);
 	}
 
-    protected function loadFromDB( string $where = ''): ResourceCollectionInterface
+    protected function loadFromDB(): ResourceCollectionInterface
     {
         // gather data from DB and generate the collection
 		$db = new App();
+
+		$req = 'SELECT * FROM genres';
 
 		if ( $this->limit() )
 		{
@@ -41,28 +43,17 @@ class GenreResourceCollection extends AbstractResourceCollection
 			{
 				$this->offset = 0;
 			}
-			$query = $db::$dbh->prepare("SELECT * FROM genres");
+			$req .= ' LIMIT '.intval($this->limit).' OFFSET '.intval($this->offset);
 		}
-		else
-		{
-			//$query = $
-			$query = $db::$dbh->prepare("SELECT * FROM genres");
-			//echo get_type($query);
-		}
+
+		$query = $db::$dbh->prepare($req);
 		$query->execute();
 
-			$tcnt = $cnt = 0;
 		while($row = $query->fetch(\PDO::FETCH_ASSOC))
 		{
-			$tcnt++;
-			if ( $this->offset && ($tcnt-1) < $this->offset )
-				continue;
-			$cnt++;
 			$rec = new GenreResource();
 			$rec->load($row);
 			$this->set($rec);
-			if ( @$this->limit && $cnt >= $this->limit )
-				break;
 		}
 
         return $this;
@@ -72,12 +63,14 @@ class GenreResourceCollection extends AbstractResourceCollection
     /**
      * @return integer
      */
-    public function countTotal( ): int
+	public function countTotal( ): int
     {
-        // gather data from DB and generate the collection
-    		//$dbdata = include(__DIR__.'/../../temp/Authors.data.php');
-
-        return 0;//\count($dbdata);
+		$db = new App();
+		$req = 'SELECT COUNT(*) FROM genres';
+		$query = $db::$dbh->prepare($req);
+		$query->execute();
+		$total = $query->fetch(\PDO::FETCH_ASSOC);
+        return intval($total['COUNT(*)']);
     }
 
 }
