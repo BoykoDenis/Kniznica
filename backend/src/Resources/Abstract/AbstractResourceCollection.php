@@ -75,7 +75,8 @@ abstract class AbstractResourceCollection extends ResourceCollection
 
         $total = $this->total();
 
-        if ( $request->hasPagination(App::$config['URI']['PageNoParam']) )
+        if ( $request->hasPagination(App::$config['URI']['PageNoParam'])
+        		|| $request->hasPagination(App::$config['URI']['PageSizeParam']) )
         {
 	        $this->limit = (int)$request->paginationValue(App::$config['URI']['PageSizeParam']);
 	        if ( $this->limit < 1 )
@@ -83,7 +84,11 @@ abstract class AbstractResourceCollection extends ResourceCollection
 
 	        $page = (int)$request->paginationValue(App::$config['URI']['PageNoParam']);
 
-	        if ( $page <= 0 )
+	        if ( $page == 0 )
+	        {
+	            $page = 1;
+	        }
+	        elseif ( $page < 0 )
 	        {
 	            throw new \InvalidArgumentException('Invalid page argument given!');
 	        }
