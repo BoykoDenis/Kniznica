@@ -29,10 +29,12 @@ class BookResourceCollection extends AbstractResourceCollection
 	}
 
 
-    protected function loadFromDB( string $where = ''): ResourceCollectionInterface
+    protected function loadFromDB(): ResourceCollectionInterface
     {
         // gather data from DB and generate the collection
 		$db = new App();
+
+		$req = 'SELECT * FROM books';
 
 		if ( $this->limit() )
 		{
@@ -40,28 +42,23 @@ class BookResourceCollection extends AbstractResourceCollection
 			{
 				$this->offset = 0;
 			}
-			$query = $db::$dbh->prepare("SELECT * FROM books");
+
+			$req .= ' LIMIT ? OFFSET ?';
+			$query = $db::$dbh->prepare($req);
+			$query->execute([$this->limit(), $this->offset()]);
 		}
 		else
 		{
-			//$query = $
-			$query = $db::$dbh->prepare("SELECT * FROM books");
-			//echo get_type($query);
+			$query = $db::$dbh->prepare($req);
+			$query->execute();
 		}
-		$query->execute();
-		$tcnt = $cnt = 0;
+
 
 		while($row = $query->fetch(\PDO::FETCH_ASSOC))
 		{
-			$tcnt++;
-			if ( $this->offset && ($tcnt-1) < $this->offset )
-				continue;
-			$cnt++;
 			$rec = new BookResource();
 			$rec->load($row);
 			$this->set($rec);
-			if ( @$this->limit && $cnt >= $this->limit )
-				break;
 		}
 
         return $this;

@@ -222,12 +222,11 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
         }
         elseif ( $request->relationship() == 'authorbook' )
         {
-            //echo 'here';
+
             if ( $this->type() == 'authors' ) $relname = 'books';
             elseif ( $this->type() == 'books' ) $relname = 'authors';
             else echo 'wrong relationship name';
             $this->loadById( $request->id() );
-            //echo $relname;
             $related = $this->getRelatedIDs( $request->relationship(), // relationship name
                                              $request->id(), // main ID
                                              $relationsIDnames[ $this->type() ], // main object IDname
@@ -235,29 +234,59 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
 
             $related = $this->createCollection( $relname, $related );
 
-            //$related = new BookResourceCollection( $related );
             $rel = new Relationship( $relname, $related );
             $this->relationshipCollection->set( $rel );
-            //print_r($this);
-            //print_r($this->relationships());
 
-            //$bookres = new BookResource($request->relationship(), $request->id(), 'aid', 'bid');
-
-
-            //$request->type() ==> main
-            //secondone from relation ship goes as a relationship to the main one
         }
         elseif ( $request->relationship() == 'bookgenre')
         {
+            if ( $this->type() == 'books' ) $relname = 'genres';
+            elseif ( $this->type() == 'genres' ) $relname = 'books';
+            else echo 'wrong relationship name';
+            $this->loadById( $request->id() );
+            $related = $this->getRelatedIDs( $request->relationship(), // relationship name
+                                             $request->id(), // main ID
+                                             $relationsIDnames[ $this->type() ], // main object IDname
+                                             $relationsIDnames[ $relname ]); // related object IDname
 
+            $related = $this->createCollection( $relname, $related );
+
+            $rel = new Relationship( $relname, $related );
+            $this->relationshipCollection->set( $rel );
         }
         elseif ( $request->relationship() == 'authorgenre')
         {
+            //non steght forward db connection (author-genre)
+            //should be remade
+            if ( $this->type() == 'authors' ) $relname = 'genres';
+            elseif ( $this->type() == 'genres' ) $relname = 'authors';
+            else echo 'wrong relationship name';
+            $this->loadById( $request->id() );
+            $related = $this->getRelatedIDs( $request->relationship(), // relationship name
+                                             $request->id(), // main ID
+                                             $relationsIDnames[ $this->type() ], // main object IDname
+                                             $relationsIDnames[ $relname ]); // related object IDname
 
+            $related = $this->createCollection( $relname, $related );
+
+            $rel = new Relationship( $relname, $related );
+            $this->relationshipCollection->set( $rel );
         }
         elseif ( $request->relationship() == 'userbook')
         {
+            if ( $this->type() == 'users' ) $relname = 'books';
+            elseif ( $this->type() == 'books' ) $relname = 'users';
+            else echo 'wrong relationship name';
+            $this->loadById( $request->id() );
+            $related = $this->getRelatedIDs( $request->relationship(), // relationship name
+                                             $request->id(), // main ID
+                                             $relationsIDnames[ $this->type() ], // main object IDname
+                                             $relationsIDnames[ $relname ]); // related object IDname
 
+            $related = $this->createCollection( $relname, $related );
+
+            $rel = new Relationship( $relname, $related );
+            $this->relationshipCollection->set( $rel );
         }
     }
 
@@ -299,6 +328,26 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
                 $rels[] = $res;
             }
             return new AuthorResourceCollection( $rels ?: [] );
+        }
+        elseif ( $type == 'genres' )
+        {
+            foreach($ids as $id)
+            {
+                $res = new GenreResource();
+                $res->loadById( $id );
+                $rels[] = $res;
+            }
+            return new GenreResourceCollection( $rels ?: [] );
+        }
+        elseif ( $type == 'users' )
+        {
+            foreach($ids as $id)
+            {
+                $res = new UserResource();
+                $res->loadById( $id );
+                $rels[] = $res;
+            }
+            return new UserResourceCollection( $rels ?: [] );
         }
     }
 

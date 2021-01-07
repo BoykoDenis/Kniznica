@@ -94,7 +94,6 @@ class BookResource extends AbstractResource
         $db = new App();
         $req = 'DELETE FROM books WHERE id=?';
         $query = $db::$dbh->prepare($req);
-        echo $id;
         try
         {
             $query->execute( [$id] );

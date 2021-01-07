@@ -49,7 +49,6 @@ class AuthorResource extends AbstractResource
         $query = $db::$dbh->prepare( $req );
         $query->execute( [$id] );
         $dbdata = $query->fetch( \PDO::FETCH_ASSOC );
-        //echo $this->id();
 
         return $this->loadByArray( $dbdata ) ?: null;
     }
@@ -96,7 +95,6 @@ class AuthorResource extends AbstractResource
         $db = new App();
         $req = 'DELETE FROM authors WHERE id=?';
         $query = $db::$dbh->prepare($req);
-        echo $id;
         try
         {
             $query->execute( [$id] );
@@ -106,57 +104,5 @@ class AuthorResource extends AbstractResource
             $db::$dbh->rollback();
             throw new \Exception('Deletion Failed: '. $e->getMessage());
         }
-    }
-
-    protected function loadRelationship_out( $request )
-    {
-        //string $id, string $type, string $name
-        echo 'here';
-        $db = new App();
-        $this->loadById( $request->id());
-        if ( $request->relationship() == 'relationships' )
-        {
-            //$req = 'SELECT * FROM '.$name.' WHERE aid=?';
-            echo 'easter egg';
-        }
-        elseif ( $request->relationship() == 'authorbook' )
-        {
-            $req = 'SELECT bid FROM authorbook WHERE aid=?';
-            $query = $db::$dbh->prepare( $req );
-            try
-            {
-                $query->execute( [$request->id()] );
-                while($row = $query->fetch(\PDO::FETCH_ASSOC))
-                {
-                    $rels[] = $row['bid'];
-                }
-
-                //print_r($rels);
-
-                if (count($rels) == 1)
-                {
-                    echo gettype($this->id());
-                    $relation = $this->toOneRelationship( $request->relationship(),
-                                                          $this->resource('books', $rels[0]['bid']));
-                    $this->relationships()->set($relation);
-                    print_r($this);
-                    return $this;
-                }
-                else
-                {
-                    echo gettype($this->id());
-                    $relation = $this->toManyRelationship( $request->relationship(),
-                                                          $this->resource('books', $rels));
-                    $this->relationships()->set($relation);
-                    print_r($this);
-                    return $this;
-                }
-            }
-            catch (Exception $e)
-            {
-                throw new \Exception('Load Failed: '. $e->getMessage());
-            }
-        }
-        //$req = 'SELECT * FROM author'
     }
 }

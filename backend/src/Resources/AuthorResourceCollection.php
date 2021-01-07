@@ -30,10 +30,12 @@ class AuthorResourceCollection extends AbstractResourceCollection
 		//print_r($data);
 	}
 
-    protected function loadFromDB( string $where = ''): ResourceCollectionInterface
+    protected function loadFromDB(): ResourceCollectionInterface
     {
         // gather data from DB and generate the collection
 		$db = new App();
+
+		$req = 'SELECT * FROM authors';
 
 		if ( $this->limit() )
 		{
@@ -41,28 +43,23 @@ class AuthorResourceCollection extends AbstractResourceCollection
 			{
 				$this->offset = 0;
 			}
-			$query = $db::$dbh->prepare("SELECT * FROM authors");
+
+			$req .= ' LIMIT ? OFFSET ?';
+			$query = $db::$dbh->prepare($req);
+			$query->execute([$this->limit(), $this->offset()]);
 		}
 		else
 		{
-			//$query = $
-			$query = $db::$dbh->prepare("SELECT * FROM authors");
-			//echo get_type($query);
+			$query = $db::$dbh->prepare($req);
+			$query->execute();
 		}
-		$query->execute();
 
-			$tcnt = $cnt = 0;
+
 		while($row = $query->fetch(\PDO::FETCH_ASSOC))
 		{
-			$tcnt++;
-			if ( $this->offset && ($tcnt-1) < $this->offset )
-				continue;
-			$cnt++;
 			$rec = new AuthorResource();
 			$rec->load($row);
 			$this->set($rec);
-			if ( @$this->limit && $cnt >= $this->limit )
-				break;
 		}
 
         return $this;
