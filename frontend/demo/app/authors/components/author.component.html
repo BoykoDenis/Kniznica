@@ -1,11 +1,71 @@
-<h3>Author #{{ author.id }}, with books and photos</h3>
+<table class="table table-condensed">
+    <tr>
+        <td>
+<h3 *ngIf="author.id > 0">Author #{{ author.id }}, with books and photos</h3>
+<h3 *ngIf="author.id == 0">Add new author</h3>
+        </td>
+        <td class="text-right"><a routerLink="/authors">Return to Authors List</a></td>
+    </tr>
+</table>
+
+
 <demo-resource-info [resource]="author"></demo-resource-info>
 <!-- <pre>authors.get('{{ author.id }}', {{ '{' }} include: ['books', 'photos'] {{ '}' }});</pre> -->
+<!-- 
 <ul>
     <li>Name: <strong>{{ author.attributes.name }}</strong></li>
     <li>Date of birth: <strong>{{ author.attributes.date_of_birth | date }}</strong></li>
     <li>Date of dead: <strong>{{ author.attributes.date_of_death | date }}</strong></li>
 </ul>
+-->
+
+<!-- http://www.java2s.com/Tutorials/HTML_CSS/Bootstrap_Example/Form/0060__form_horizontal.htm -->
+<div class="container">
+    <h4>Author Information</h4>
+    <form #authorForm="ngForm" (ngSubmit)="onFormSubmit(authorForm)" class="form-horizontal">
+      <div class="form-group">
+        <label for="name" class="col-lg-2 control-label">Name:</label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="name" required
+        	[(ngModel)]="author.attributes.name" name="name"
+        	#aname="ngModel" [readonly]="!isEditMode">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="date_of_birth" class="col-lg-2 control-label">Date of birth:</label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="date_of_birth"
+        	[(ngModel)]="author.attributes.date_of_birth" name="date_of_birth"
+        	#adob="ngModel" [readonly]="!isEditMode">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="date_of_death" class="col-lg-2 control-label">Date of dead:</label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="date_of_death"
+        	[(ngModel)]="author.attributes.date_of_death" name="date_of_death"
+        	#adod="ngModel" [readonly]="!isEditMode">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10" *ngIf="isEditMode">
+	      <button type="submit" class="btn btn-success">Submit</button>
+	      <button type="button" class="btn btn-cancel" (click)="onCancel()">Cancel</button>
+        </div>
+        <div class="col-lg-offset-2 col-lg-10" *ngIf="!isEditMode">
+	      <button type="button" class="btn" (click)="onEdit()">Edit</button>
+        </div>
+      </div>
+    </form>
+</div>
+
+<!--
+<pre>Value : {{authorForm.value | json }} </pre>
+<pre>Valid : {{authorForm.valid}} </pre>
+<pre>Touched : {{authorForm.touched  }} </pre>
+<pre>Submitted : {{authorForm.submitted  }} </pre>
+-->
+
 <p>
     <button (click)="newAuthor()">New author</button>
     <button (click)="updateAuthor()">Update author</button>

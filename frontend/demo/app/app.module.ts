@@ -14,6 +14,9 @@ import { SharedModule } from './shared/shared.module';
 import { StoreService } from 'ngx-jsonapi/sources/store.service';
 import { JsonRipper } from 'ngx-jsonapi/services/json-ripper';
 
+// Add forms
+import { FormsModule } from '@angular/forms';
+
 const appRoutes: Routes = [
     {
         path: '',
@@ -51,7 +54,9 @@ const appRoutes: Routes = [
         RouterModule.forRoot(appRoutes, { useHash: true }),
         NgxJsonapiModule.forRoot({
             url: environment.jsonapi_url
-        })
+        }),
+        // Add forms
+        FormsModule
     ],
     declarations: [AppComponent],
     bootstrap: [AppComponent]
