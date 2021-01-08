@@ -117,7 +117,7 @@ abstract class AbstractResourceCollection extends ResourceCollection
     /**
      * @return ResourceCollectionInterface
      */
-    protected function loadFromDB( ): ResourceCollectionInterface
+    protected function loadFromDB( $query = null ): ResourceCollectionInterface
     {
         // gather data from DB and generate the collection
         return $this;

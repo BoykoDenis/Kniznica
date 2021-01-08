@@ -5,6 +5,8 @@ namespace Enm\JsonApi\bswExample;
 
 use Enm\JsonApi\JsonApiTrait;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
+use Enm\JsonApi\Model\Resource\ResourceCollection;
+use Enm\JsonApi\Model\Resource\JsonResource;
 use Enm\JsonApi\Model\Common\KeyValueCollection;
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
 use Enm\JsonApi\Model\Resource\Extension\RelatedMetaInformationInterface;
@@ -105,4 +107,30 @@ class AuthorResource extends AbstractResource
             throw new \Exception('Deletion Failed: '. $e->getMessage());
         }
     }
+
+
+    protected function getAllowedRelationshipsList()
+    {
+        return ['books'=>'books'];
+    }
+
+    protected function getRelationshipDataCollection( $relname )
+    {
+        if ( $relname == 'books' )
+        {
+            $col = new BookResourceCollection();
+            $query = 'select distinct b.*
+                        from books b
+                          inner join authorbook ab 
+                            on ab.bid = b.id
+                        where ab.aid = '.intval($this->id);
+        }
+        else
+            parent::getRelationshipDataCollection( $relname );
+
+        $col->load($query);
+
+        return $col;
+    }
+
 }

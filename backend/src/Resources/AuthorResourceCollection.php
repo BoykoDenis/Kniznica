@@ -30,31 +30,35 @@ class AuthorResourceCollection extends AbstractResourceCollection
 		//print_r($data);
 	}
 
-    protected function loadFromDB(): ResourceCollectionInterface
+    protected function loadFromDB( $query = null ): ResourceCollectionInterface
     {
-        // gather data from DB and generate the collection
-		$db = new App();
+        if ( $query )
+        {
+            $req = $query;
+        }
+        else
+        {
+            $req = 'SELECT * FROM authors';
 
-		$req = 'SELECT * FROM authors';
+            if ( $this->limit() )
+            {
+                if (!$this->offset())
+                {
+                    $this->offset = 0;
+                }
+                $req .= ' LIMIT '.intval($this->limit).' OFFSET '.intval($this->offset);
+            }
+        }
 
-		if ( $this->limit() )
-		{
-			if (!$this->offset())
-			{
-				$this->offset = 0;
-			}
-			$req .= ' LIMIT '.intval($this->limit).' OFFSET '.intval($this->offset);
-		}
+        $query = App::$dbh->prepare($req);
+        $query->execute();
 
-		$query = $db::$dbh->prepare($req);
-		$query->execute();
-
-		while($row = $query->fetch(\PDO::FETCH_ASSOC))
-		{
-			$rec = new AuthorResource();
-			$rec->load($row);
-			$this->set($rec);
-		}
+        while($row = $query->fetch(\PDO::FETCH_ASSOC))
+        {
+           $rec = new AuthorResource();
+           $rec->load($row);
+           $this->set($rec);
+        }
 
         return $this;
     }

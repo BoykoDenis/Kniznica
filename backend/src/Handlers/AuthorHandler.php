@@ -113,9 +113,13 @@ class AuthorHandler implements RequestHandlerInterface
     public function fetchRelationship( RequestInterface $request ): ResponseInterface
     {
         $resource = new AuthorResource();
+/*
         //echo gettype($request->requestBody()->data());
         //try to add related resources into the document included
         $resource->load_relationship( $request );
+*/
+        $resource->loadRelationships($request);
+
         $document = new AuthorDocument($resource, $request);
         //print_r($document);
         return new \Enm\JsonApi\Model\Response\DocumentResponse($document);

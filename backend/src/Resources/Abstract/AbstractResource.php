@@ -5,6 +5,8 @@ namespace Enm\JsonApi\bswExample;
 
 use Enm\JsonApi\Model\Request\RequestInterface;
 use Enm\JsonApi\Model\Resource\ResourceInterface;
+use Enm\JsonApi\Model\Resource\ResourceCollection;
+use Enm\JsonApi\Model\Resource\JsonResource;
 use Enm\JsonApi\Model\Common\KeyValueCollection;
 use Enm\JsonApi\Model\Common\KeyValueCollectionInterface;
 use Enm\JsonApi\Model\Resource\Extension\RelatedMetaInformationInterface;
@@ -153,21 +155,25 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
      */
     protected function loadByRequest( RequestInterface $request ): ResourceInterface
     {
-        echo $this->id();
-        return $this->loadById($request->id());
+        $this->loadById($request->id());
+
+        if ( $request->requestsRelationships() )
+        {
+            $this->loadRelationshipsByRequest( $request );
+        }
+
+        return $this;
     }
 
     /**
      * @return Resource
      */
-
-    /*
-     protected function loadById( string $id ): ResourceInterface
+    protected function loadById( string $id ): ResourceInterface
     {
         $this->id = $id;
         return $this;
     }
-    */
+
     /**
      * @return Resource
      */
@@ -203,6 +209,85 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
                 $this->attributeCollection->set($fld, $data[$fld]);
         }
 
+        return $this;
+    }
+
+    /**
+     * @return Resource
+     */
+    public function loadRelationships( $data ): ResourceInterface
+    {
+        if ( $data instanceof RequestInterface )
+        {
+            if ( !$data->relationship() && !$data->requestsRelationships() )
+            {
+	        throw new \InvalidArgumentException('There is not requests for relationships in request.');
+            }
+            return $this->loadRelationshipsByRequest( $data );
+        }
+        elseif ($data instanceof ResourceInterface)
+        {
+            if ( $data->type() !== $this->type )
+            {
+	            throw new \InvalidArgumentException('Invalid data type given! '.$data->type()." !== {$this->type}");
+            }
+            return $this->loadRelationshipsByResource( $data );
+
+        }
+        elseif ( \is_string($data) )
+        {
+            return $this->loadRelationshipsByName( $data );
+        }
+        else
+        {
+            throw new \InvalidArgumentException('Invalid data given!  C2.'.get_class($data));
+        }
+    }
+
+    protected function getAllowedRelationshipsList()
+    {
+        return [];
+    }
+
+    protected function getRelationshipDataCollection( $relname )
+    {
+        // return empty collection
+        return new ResourceCollection();
+    }
+
+    /**
+     * @return Resource
+     */
+    protected function loadRelationshipsByRequest( RequestInterface $request ): ResourceInterface
+    {
+        if ( $request->relationship() )
+            $this->loadRelationshipsByName( $request->relationship() );
+
+        foreach( $this->getAllowedRelationshipsList() as $name=>$type )
+        {
+            if ( $request->requestsInclude($name) )
+                $this->loadRelationshipsByName( $name );
+        }
+        return $this;
+    }
+
+    /**
+     * @return Resource
+     */
+    protected function loadRelationshipsByName( string $relname ): ResourceInterface
+    {
+        $map = $this->getAllowedRelationshipsList();
+        if ( !$map[$relname] )
+        {
+            throw new \InvalidArgumentException("There is no defined relationaship {$relname}.");
+        }
+
+        $related = $this->getRelationshipDataCollection($relname);
+        if ( !$related->isEmpty() )
+        {
+            $rel = new Relationship( $relname, $related );
+            $this->relationshipCollection->set( $rel );
+        }
         return $this;
     }
 
