@@ -19,13 +19,13 @@ use Enm\JsonApi\Model\Document\Document;
 use Enm\JsonApi\Model\Document\OffsetBasedPaginatedDocument;
 use Enm\JsonApi\Model\Resource\JsonResource;
 
-require_once (__DIR__.'/../Resources/BookResource.php');
-require_once (__DIR__.'/../Documents/BookDocument.php');
+require_once (__DIR__.'/../Resources/GenreResource.php');
+require_once (__DIR__.'/../Documents/GenreDocument.php');
 
-require_once (__DIR__.'/../Resources/BookResourceCollection.php');
-require_once (__DIR__.'/../Documents/BookCollectionDocument.php');
+require_once (__DIR__.'/../Resources/GenreResourceCollection.php');
+require_once (__DIR__.'/../Documents/GenreCollectionDocument.php');
 
-class BookHandler implements RequestHandlerInterface
+class GenreHandler implements RequestHandlerInterface
 {
     use NoRelationshipFetchTrait;
 	use NoResourceModificationTrait;
@@ -34,9 +34,9 @@ class BookHandler implements RequestHandlerInterface
 
     public function fetchResource(RequestInterface $request): ResponseInterface
 	{
-		$resource = new BookResource();
+		$resource = new GenreResource();
 		$resource->load($request);
-		$document = new BookDocument($resource, $request);
+		$document = new GenreDocument($resource, $request);
 
 		return new \Enm\JsonApi\Model\Response\DocumentResponse($document);
 	}
@@ -48,9 +48,9 @@ class BookHandler implements RequestHandlerInterface
      */
 	public function fetchResources(RequestInterface $request): ResponseInterface
 	{
-		$resource = new BookResourceCollection();
+		$resource = new GenreResourceCollection();
 		$resource->load($request);
-		$document = new BookCollectionDocument($resource, $request);
+		$document = new GenreCollectionDocument($resource, $request);
 
 		return new \Enm\JsonApi\Model\Response\DocumentResponse($document);
 	}
@@ -63,11 +63,11 @@ class BookHandler implements RequestHandlerInterface
      */
     public function createResource(RequestInterface $request): ResponseInterface
     {
-        $resource = new BookResource();
+        $resource = new GenreResource();
         //print_r($request->requestBody()->data()->all()[0]->attributes());
         //$request = Server\JsonApiServer::createResponseBody($request);
         $resource->add($request->requestBody()->data()->all()[0]);
-        $document = new BookDocument($resource, $request);
+        $document = new GenreDocument($resource, $request);
 //        $resource->add();
 
 
@@ -82,31 +82,31 @@ class BookHandler implements RequestHandlerInterface
      */
     public function patchResource(RequestInterface $request): ResponseInterface
     {
-        $resource = new BookResource();
+        $resource = new GenreResource();
         $resource->edit($request->requestBody()->data()->all()[0]);
 
-        $document = new BookDocument($resource, $request);
+        $document = new GenreDocument($resource, $request);
 
         return new \Enm\JsonApi\Model\Response\DocumentResponse($document);
     }
 
     public function deleteResource(RequestInterface $request): ResponseInterface
     {
-        $resource = new BookResource();
+        $resource = new GenreResource();
         $resource->remove($request->requestBody()->data()->all()[0]);
 
-        $document = new BookDocument($resource, $request);
+        $document = new GenreDocument($resource, $request);
 
         return new \Enm\JsonApi\Model\Response\DocumentResponse($document);
     }
 
     public function fetchRelationship( RequestInterface $request ): ResponseInterface
     {
-        $resource = new BookResource();
+        $resource = new GenreResource();
         //echo gettype($request->requestBody()->data());
         //try to add related resources into the document included
         $resource->load_relationship( $request );
-        $document = new BookDocument($resource, $request);
+        $document = new GenreDocument($resource, $request);
         //print_r($document);
         return new \Enm\JsonApi\Model\Response\DocumentResponse($document);
     }

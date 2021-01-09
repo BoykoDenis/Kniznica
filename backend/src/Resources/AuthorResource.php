@@ -18,9 +18,7 @@ use Enm\JsonApi\Model\Resource\Relationship\RelationshipCollectionInterface;
 
 require_once (__DIR__."/Abstract/AbstractResource.php");
 
-/**
- * @author Serge Boyko s.boyko@gmail.com
- */
+
 class AuthorResource extends AbstractResource
 {
     use \Enm\JsonApi\JsonApiTrait;
@@ -111,7 +109,8 @@ class AuthorResource extends AbstractResource
 
     protected function getAllowedRelationshipsList()
     {
-        return ['books'=>'books'];
+        return ['books'=>'books',
+                'genres'=>'genres'];
     }
 
     protected function getRelationshipDataCollection( $relname )
@@ -121,15 +120,25 @@ class AuthorResource extends AbstractResource
             $col = new BookResourceCollection();
             $req = 'select distinct b.*
                         from books b
-                          inner join authorbook ab 
+                          inner join authorbook ab
                             on ab.bid = b.id
+                        where ab.aid = '.intval($this->id);
+        }
+        elseif( $relname == 'genres' )
+        {
+            $col = new GenreResourceCollection();
+            $req = 'select distinct g.*
+                        from genres g
+                            inner join bookgenre bg
+                                on bg.gid = g.id
+                            inner join authorbook ab
+                                on ab.bid = bg.bid
                         where ab.aid = '.intval($this->id);
         }
         else
             return parent::getRelationshipDataCollection( $relname );
 
         $col->load($req);
-
         return $col;
     }
 
@@ -140,6 +149,14 @@ class AuthorResource extends AbstractResource
             $req = 'select bid as id
                         from authorbook
                         where aid = '.intval($this->id);
+        }
+        elseif ( $relname == 'genres' )
+        {
+            $req = 'select gid as id
+                        from bookgenre bg
+                            inner join authorbook ab
+                                on bg.bid = ab.bid
+                            where aid = '.intval($this->id);
         }
         else
             return parent::getRelationshipIdList( $relname );

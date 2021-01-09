@@ -8,9 +8,7 @@ use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
 require_once (__DIR__."/Abstract/AbstractResourceCollection.php");
 require_once (__DIR__."/AuthorResource.php");
 
-/**
- * @author Serge Boyko s.boyko@gmail.com
- */
+
 class AuthorResourceCollection extends AbstractResourceCollection
 {
     /**
