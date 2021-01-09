@@ -24,7 +24,7 @@ export class AuthorComponent {
     public constructor(
         protected authorsService: AuthorsService,
         protected photosService: PhotosService,
-        booksService: BooksService,
+        protected booksService: BooksService,
         // init router
         private router: Router,
         private route: ActivatedRoute
@@ -70,18 +70,35 @@ export class AuthorComponent {
     /*
     Update name for actual author
     */
-    public updateAuthor() {
+    public addBook() {
+/*
         this.author.attributes.name = prompt('Author name:', this.author.attributes.name);
         console.log('author data for save with book include', this.author.toObject({ include: ['books'] }));
         console.log('author data for save without any include', this.author.toObject());
-        this.author.save(/* { include: ['book'] } */).subscribe(success => {
-            console.log('author saved', this.author.toObject());
-        });
+*/
+
+        let newbookid = prompt('Link to book (id):', '');
+        if ( !newbookid || parseInt(newbookid) < 1 )
+        {
+            return;
+        }
+        newbookid = ''+parseInt(newbookid)
+        this.booksService.get(newbookid).subscribe(
+                book => {
+                    console.log('success book', book);
+                    this.author.addRelationship(book);
+
+                    this.author.save( { include: ['books'] } ).subscribe(success => {
+                        console.log('author saved', this.author.toObject());
+                    });
+                },
+                error => alert('Cannot find book with id:'+newbookid)
+            );
     }
 
-    public removeRelationship() {
-        this.author.removeRelationship('photos', '1');
-        this.author.save();
+    public removeBook( bookId ) {
+        this.author.removeRelationship('books', bookId);
+        this.author.save( { include: ['books'] } );
         console.log('removeRelationship save with photos include', this.author.toObject());
     }
 
