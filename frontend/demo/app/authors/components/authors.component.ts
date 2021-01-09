@@ -16,7 +16,6 @@ export class AuthorsComponent {
         route.queryParams.subscribe(({ page }) => {
             authorsService
                 .all({
-                    include: ['books'],
                     sort: ['name'],
                     page: { number: page || 1, size: 5 },
                     ttl: 3600
