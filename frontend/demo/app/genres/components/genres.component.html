@@ -1,0 +1,24 @@
+<table class="table table-condensed">
+    <tr>
+        <td><h3>Genres</h3></td>
+        <td class="text-right"><a [routerLink]="['/genres', 0]">Add new genre</a></td>
+    </tr>
+</table>
+
+<demo-collection-info [collection]="genres"></demo-collection-info>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+        </tr>
+    </thead>
+    <!-- Use authors example. @deprected since version 2.0.0 -->
+    <tr *ngFor="let genre of genres.data; trackBy: genres.trackBy">
+        <td>{{ genre.id }}</td>
+        <td>
+            <a [routerLink]="['/genres', genre.id]">{{ genre.attributes.title }}</a>
+        </td>
+    </tr>
+</table>
+<demo-collection-paginator [collection]="genres"></demo-collection-paginator>

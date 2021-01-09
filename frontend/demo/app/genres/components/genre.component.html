@@ -1,0 +1,14 @@
+<table class="table table-condensed">
+    <tr>
+        <td>
+<h3 *ngIf="genre.id > 0">{{ genre.attributes.gname }}</h3>
+<h3 *ngIf="genre.id == 0">Add new genre</h3>
+        </td>
+        <td class="text-right"><a routerLink="/genres">Return to Genres List</a></td>
+    </tr>
+</table>
+
+<demo-resource-info [resource]="genre"></demo-resource-info>
+<ul>
+    <li>Title: <strong>{{ genre.attributes.gname }}</strong></li>
+</ul>
