@@ -93,7 +93,8 @@ class AuthorHandler implements RequestHandlerInterface
     public function patchResource(RequestInterface $request): ResponseInterface
     {
         $resource = new AuthorResource();
-        $resource->edit($request->requestBody()->data()->all()[0]);
+//        $resource->edit($request->requestBody()->data()->all()[0]);
+        $resource->saveByRequest($request);
 
         $document = new AuthorDocument($resource, $request);
 

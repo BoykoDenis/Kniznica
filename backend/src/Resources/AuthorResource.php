@@ -119,18 +119,93 @@ class AuthorResource extends AbstractResource
         if ( $relname == 'books' )
         {
             $col = new BookResourceCollection();
-            $query = 'select distinct b.*
+            $req = 'select distinct b.*
                         from books b
                           inner join authorbook ab 
                             on ab.bid = b.id
                         where ab.aid = '.intval($this->id);
         }
         else
-            parent::getRelationshipDataCollection( $relname );
+            return parent::getRelationshipDataCollection( $relname );
 
-        $col->load($query);
+        $col->load($req);
 
         return $col;
+    }
+
+    protected function getRelationshipIdList( String $relname )
+    {
+        if ( $relname == 'books' )
+        {
+            $req = 'select bid as id
+                        from authorbook
+                        where aid = '.intval($this->id);
+        }
+        else
+            return parent::getRelationshipIdList( $relname );
+
+        $query = App::$dbh->prepare($req);
+        $query->execute();
+
+        $idlist = [];
+        while($row = $query->fetch(\PDO::FETCH_ASSOC))
+        {
+           $idlist[] = $row['id'];
+        }
+
+        return $idlist;
+    }
+
+    protected function addRelFKToDB( String $relname, $id )
+    {
+        if ( $relname == 'books' )
+        {
+            $req = 'INSERT INTO authorbook (aid, bid) VALUE ('
+                     .intval($this->id).','
+                     .intval($id).')';
+        }
+        else
+            return parent::addRelFKToDB( $relname, $id );
+
+        $query = App::$dbh->prepare($req);
+
+        try
+        {
+            $query->execute(  );
+        }
+        catch (Exception $e)
+        {
+            App::$dbh->rollback();
+            throw new \Exception('Cannot add to DB: '.$req.';'. $e->getMessage());
+        }
+
+        return true;
+    }
+
+    protected function delRelFKFromDB( String $relname, $id )
+    {
+        if ( $relname == 'books' )
+        {
+            $req = 'DELETE FROM authorbook
+                     where aid = '.intval($this->id).'
+                       and bid = '.intval($id);
+        }
+        else
+            return parent::delRelFKFromDB( $relname, $id );
+
+        $query = App::$dbh->prepare($req);
+
+        try
+        {
+            $query->execute(  );
+        }
+        catch (Exception $e)
+        {
+            App::$dbh->rollback();
+            throw new \Exception('Cannot del from DB: '.$req.';'. $e->getMessage());
+        }
+
+        return true;
     }
 
 }

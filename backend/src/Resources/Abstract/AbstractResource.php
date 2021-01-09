@@ -134,6 +134,79 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
         }
     }
 
+    /**
+     * @return Resource
+     */
+    public function saveByRequest( RequestInterface $request ): ResourceInterface
+    {
+        $this->loadById($request->id());
+
+        $requestUri = $request->uri();
+        parse_str($requestUri->getQuery(), $query);
+        if (array_key_exists('include', $query))
+        {
+            $includes = explode(',', $query['include']);
+            $map = $this->getAllowedRelationshipsList();
+            foreach( $includes as $relname )
+            {
+                if ( $map[$relname] )
+                {
+                    $related = $request->requestBody()->data()->all()[0]->relationships();
+                    $this->editRelationship($relname, $related);
+                }
+                else
+                {
+                    throw new \InvalidArgumentException("Invalid relationship {$relname} passed to PATCH:");
+                }
+            }
+        }
+        else
+        {
+            $this->edit($request->requestBody()->data()->all()[0]);
+        }
+        return $this;
+    }
+
+    public function editRelationship( String $relname,
+                                      RelationshipCollection $relationships )
+    {
+        $map = $this->getAllowedRelationshipsList();
+        $dbidlist = $this->getRelationshipIdList( $relname );
+        $dbidlist = array_flip($dbidlist);
+        $idlist = [];
+
+        if ( $relationships->has($relname) )
+        {
+            $rel = $relationships->get($relname);
+            foreach ($rel->related()->all() as $resource)
+            {
+                if ( $resource->type() != $map[$relname] )
+                {
+                    throw new \InvalidArgumentException("Invalid relationship type {$resource->type} in relationship {$relname}");
+                }
+                $idlist[$resource->id()] = $resource->id();
+            }
+        }
+
+	// Add new relationships records
+        foreach(array_keys($idlist) as $id)
+	{
+	    if ( !array_key_exists($id, $dbidlist) )
+	    {
+	        $this->addRelFKToDB($relname, $id);
+	    }
+	}
+
+	// Remove deleted relationships records
+	foreach(array_keys($dbidlist) as $id)
+	{
+	    if ( !array_key_exists($id, $idlist) )
+	    {
+	        $this->delRelFKFromDB($relname, $id);
+	    }
+	}
+    }
+
     public function edit( Object $data )
     {
         if ($data)
