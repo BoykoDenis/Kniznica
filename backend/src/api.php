@@ -17,6 +17,8 @@ if ( $_SERVER["REQUEST_METHOD"] === "OPTIONS" )
 require_once(__DIR__."/../vendor/autoload.php");
 require_once(__DIR__."/Handlers/AuthorHandler.php");
 require_once(__DIR__."/Handlers/BookHandler.php");
+require_once(__DIR__."/Handlers/GenreHandler.php");
+require_once(__DIR__."/Handlers/UserHandler.php");
 
 // create the server
 $jsonApi = new JsonApiServer(new Deserializer(), new Serializer());
@@ -30,8 +32,8 @@ try {
 
     $jsonApi->addHandler('authors', new AuthorHandler());
     $jsonApi->addHandler('books', new BookHandler());
-//  $jsonApi->addHandler('genres', new GenreHandler());
-//  $jsonApi->addHandler('users', new UserHandler());
+    $jsonApi->addHandler('genres', new GenreHandler());
+    $jsonApi->addHandler('users', new UserHandler());
 
     // create the json api request
     $request = new Request( $_SERVER['REQUEST_METHOD'],

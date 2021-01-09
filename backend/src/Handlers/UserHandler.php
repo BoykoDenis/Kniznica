@@ -19,11 +19,11 @@ use Enm\JsonApi\Model\Document\Document;
 use Enm\JsonApi\Model\Document\OffsetBasedPaginatedDocument;
 use Enm\JsonApi\Model\Resource\JsonResource;
 
-require_once (__DIR__.'/../Resources/BookResource.php');
-require_once (__DIR__.'/../Documents/BookDocument.php');
+require_once (__DIR__.'/../Resources/UserResource.php');
+require_once (__DIR__.'/../Documents/UserDocument.php');
 
-require_once (__DIR__.'/../Resources/BookResourceCollection.php');
-require_once (__DIR__.'/../Documents/BookCollectionDocument.php');
+require_once (__DIR__.'/../Resources/UserResourceCollection.php');
+require_once (__DIR__.'/../Documents/UserCollectionDocument.php');
 
 class UserHandler implements RequestHandlerInterface
 {
@@ -92,7 +92,7 @@ class UserHandler implements RequestHandlerInterface
 
     public function deleteResource(RequestInterface $request): ResponseInterface
     {
-        $resource = new BookResource();
+        $resource = new UserResource();
         $resource->remove($request->requestBody()->data()->all()[0]);
 
         $document = new UserDocument($resource, $request);

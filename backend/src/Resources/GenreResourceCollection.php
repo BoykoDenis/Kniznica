@@ -6,19 +6,15 @@ namespace Enm\JsonApi\bswExample;
 use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
 
 require_once (__DIR__."/Abstract/AbstractResourceCollection.php");
-require_once (__DIR__."/AuthorResource.php");
+require_once (__DIR__."/GenreResource.php");
 
-/**
- * @author Serge Boyko s.boyko@gmail.com
- */
+
 class GenreResourceCollection extends AbstractResourceCollection
 {
     /**
      * @var string
      */
-	protected $type = 'genres';
-
-
+    protected $type = 'genres';
 
     /**
      * @return ResourceCollectionInterface
@@ -30,31 +26,35 @@ class GenreResourceCollection extends AbstractResourceCollection
 		//print_r($data);
 	}
 
-    protected function loadFromDB(): ResourceCollectionInterface
+
+    protected function loadFromDB( $query = null ): ResourceCollectionInterface
     {
-        // gather data from DB and generate the collection
-		$db = new App();
+        if ( $query )
+        {
+            $req = $query;
+        }
+        else
+        {
+            $req = 'SELECT * FROM genres';
 
-		$req = 'SELECT * FROM genres';
-
-		if ( $this->limit() )
-		{
-			if (!$this->offset())
-			{
-				$this->offset = 0;
-			}
-			$req .= ' LIMIT '.intval($this->limit).' OFFSET '.intval($this->offset);
-		}
-
-		$query = $db::$dbh->prepare($req);
+            if ( $this->limit() )
+            {
+                if (!$this->offset())
+                {
+                    $this->offset = 0;
+                }
+                $req .= ' LIMIT '.intval($this->limit).' OFFSET '.intval($this->offset);
+            }
+        }
+        $query = App::$dbh->prepare($req);
 		$query->execute();
 
-		while($row = $query->fetch(\PDO::FETCH_ASSOC))
-		{
-			$rec = new GenreResource();
-			$rec->load($row);
-			$this->set($rec);
-		}
+        while($row = $query->fetch(\PDO::FETCH_ASSOC))
+        {
+            $rec = new GenreResource();
+            $rec->load($row);
+            $this->set($rec);
+        }
 
         return $this;
     }
@@ -72,5 +72,4 @@ class GenreResourceCollection extends AbstractResourceCollection
 		$total = $query->fetch(\PDO::FETCH_ASSOC);
         return intval($total['COUNT(*)']);
     }
-
 }
