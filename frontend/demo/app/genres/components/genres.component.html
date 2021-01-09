@@ -11,13 +11,17 @@
         <tr>
             <th>ID</th>
             <th>Title</th>
+            <th>&nbsp;</th>
         </tr>
     </thead>
     <!-- Use authors example. @deprected since version 2.0.0 -->
     <tr *ngFor="let genre of genres.data; trackBy: genres.trackBy">
         <td>{{ genre.id }}</td>
         <td>
-            <a [routerLink]="['/genres', genre.id]">{{ genre.attributes.title }}</a>
+            <a [routerLink]="['/genres', genre.id]">{{ genre.attributes.gname }}</a>
+        </td>
+        <td class="text-right">
+            <a (click)="delete(genre)" title="Delele genre"><small>DELETE</small></a>
         </td>
     </tr>
 </table>

@@ -9,6 +9,25 @@
 </table>
 
 <demo-resource-info [resource]="genre"></demo-resource-info>
-<ul>
-    <li>Title: <strong>{{ genre.attributes.gname }}</strong></li>
-</ul>
+
+<div class="container">
+    <form #genreForm="ngForm" (ngSubmit)="onFormSubmit(genreForm)" class="form-horizontal">
+      <div class="form-group">
+        <label for="name" class="col-lg-2 control-label">Name:</label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="gname" required
+        	[(ngModel)]="genre.attributes.gname" name="gname"
+        	#gname="ngModel" [readonly]="!isEditMode">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10" *ngIf="isEditMode">
+	      <button type="submit" class="btn btn-success">Submit</button>
+	      <button type="button" class="btn btn-cancel" (click)="onCancel()">Cancel</button>
+        </div>
+        <div class="col-lg-offset-2 col-lg-10" *ngIf="!isEditMode">
+	      <button type="button" class="btn" (click)="onEdit()">Edit</button>
+        </div>
+      </div>
+    </form>
+</div>

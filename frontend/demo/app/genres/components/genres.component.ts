@@ -33,30 +33,8 @@ export class GenresComponent {
         });
     }
 
-    public getAll(remotefilter) {
-        // we add some remote filter
-        remotefilter.date_published = {
-            since: '1983-01-01',
-            until: '2010-01-01'
-        };
-
-        let genres$ = this.genresService.all({
-            remotefilter: remotefilter,
-            page: { number: 1 },
-            include: ['author', 'photos']
-        });
-        genres$.subscribe(
-            genres => {
-                this.genres = genres;
-
-                console.log('success genres controller', this.genres);
-            },
-            error => console.info('error genres controller', error)
-        );
-        genres$.toPromise().then(success => console.log('genres loaded PROMISE'));
-    }
-
     public delete(genre: Resource) {
-        this.genresService.delete(genre.id);
+        if ( confirm( 'Are you sure to delete genre: ' + genre.attributes.gname ) )
+            this.genresService.delete(genre.id);
     }
 }
