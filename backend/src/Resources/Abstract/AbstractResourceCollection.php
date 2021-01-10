@@ -43,7 +43,6 @@ abstract class AbstractResourceCollection extends ResourceCollection
     public function __construct( array $data = [] )
     {
         parent::__construct( $data );
-        //print_r($data);
     }
 
     /**

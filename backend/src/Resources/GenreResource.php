@@ -16,9 +16,6 @@ use Enm\JsonApi\Model\Resource\Relationship\RelationshipCollectionInterface;
 
 require_once (__DIR__."/Abstract/AbstractResource.php");
 
-/**
- * @author Serge Boyko s.boyko@gmail.com
- */
 class GenreResource extends AbstractResource
 {
     use \Enm\JsonApi\JsonApiTrait;
@@ -44,13 +41,10 @@ class GenreResource extends AbstractResource
     {
         // Here add loading by id from DB
         // and the call $this->loadByArray with gather from DB data
-        $db = new App();
-        $req = "SELECT * FROM genres WHERE id = :id";
-        $query = $db::$dbh->prepare($req);
-        $query->bindParam(":id", $id);
-        $query->execute();
+        $req = "SELECT * FROM genres WHERE id = ?";
+        $query = App::$dbh->prepare( $req );
+        $query->execute( [$id] );
         $dbdata = $query->fetch(\PDO::FETCH_ASSOC);
-        //echo $this->id();
 
         return $this->loadByArray( $dbdata );
     }
@@ -59,42 +53,42 @@ class GenreResource extends AbstractResource
     {
 
         //find better solution
-        $db = new App();
         $req = "INSERT INTO genres (gname) VALUE (?)";
-        $query = $db::$dbh->prepare($req);
+        $query = App::$dbh->prepare($req);
 
         try
         {
             $query->execute( $rawdata['gname'] );
+            $this->id = App::$dbh->lastInsertId();
+            $this->loadById( $this->id );
         }
         catch (Exception $e)
         {
-            $db::$dbh->rollback();
+            App::$dbh->rollback();
             throw new \Exception('Load Failed: '. $e->getMessage());
         }
     }
 
     protected function editInDB( string $id, array $rawdata )
     {
-        $db = new App();
         $req = 'UPDATE genres SET gname=? WHERE id=?';
-        $query = $db::$dbh->prepare($req);
+        $query = App::$dbh->prepare($req);
         try
         {
             $query->execute( [$rawdata['gname'], $id]);
+            $this->loadById( $id );
         }
         catch (Exception $e)
         {
-            $db::$dbh->rollback();
+            App::$dbh->rollback();
             throw new \Exception('Patch Failed: '. $e->getMessage());
         }
     }
 
     protected function deleteFromDB( string $id )
     {
-        $db = new App();
         $req = 'DELETE FROM genres WHERE id=?';
-        $query = $db::$dbh->prepare($req);
+        $query = App::$dbh->prepare($req);
         echo $id;
         try
         {
@@ -102,8 +96,128 @@ class GenreResource extends AbstractResource
         }
         catch (Exception $e)
         {
-            $db::$dbh->rollback();
+            App::$dbh->rollback();
             throw new \Exception('Deletion Failed: '. $e->getMessage());
         }
     }
+
+    protected function getAllowedRelationshipsList()
+    {
+        return ['books'=>'books',
+                'authors'=>'authors'];
+    }
+
+    protected function getRelationshipDataCollection( $relname )
+    {
+        if ( $relname == 'authors' )
+        {
+            $col = new AuthorResourceCollection();
+            $req = 'select distinct a.*
+                        from authors a
+                          inner join authorbook ab
+                            on ab.aid = a.id
+                          inner join bookgenre bg
+                            on bg.bid = ab.bid
+                        where bg.gid = '.intval($this->id);
+        }
+        elseif( $relname == 'books' )
+        {
+            $col = new BookResourceCollection();
+            $req = 'select distinct b.*
+                        from books b
+                            inner join bookgenre bg
+                                on bg.bid = b.id
+                        where bg.gid = '.intval($this->id);
+        }
+        else
+            return parent::getRelationshipDataCollection( $relname );
+
+        $col->load($req);
+        return $col;
+    }
+
+    protected function getRelationshipIdList( String $relname )
+    {
+        if ( $relname == 'authors' )
+        {
+            $req = 'select aid as id
+                        from authorbook ab
+                            inner join bookgenre bg
+                                on bg.bid = ab.bid
+                        where gid = '.intval($this->id);
+        }
+        elseif ( $relname == 'books' )
+        {
+            $req = 'select bid as id
+                        from bookgenre bg
+                            where gid = '.intval($this->id);
+        }
+        else
+            return parent::getRelationshipIdList( $relname );
+
+        $query = App::$dbh->prepare($req);
+        $query->execute();
+
+        $idlist = [];
+        while($row = $query->fetch(\PDO::FETCH_ASSOC))
+        {
+           $idlist[] = $row['id'];
+        }
+
+        return $idlist;
+    }
+
+    protected function addRelFKToDB( String $relname, $id )
+    {
+        if ( $relname == 'books' )
+        {
+            $req = 'INSERT INTO bookgenre (bid, gid) VALUE ('
+                     .intval($id).','
+                     .intval($this->id).')';
+        }
+        else
+            return parent::addRelFKToDB( $relname, $id );
+
+        $query = App::$dbh->prepare($req);
+
+        try
+        {
+            $query->execute(  );
+        }
+        catch (Exception $e)
+        {
+            App::$dbh->rollback();
+            throw new \Exception('Cannot add to DB: '.$req.';'. $e->getMessage());
+        }
+
+        return true;
+    }
+
+    protected function delRelFKFromDB( String $relname, $id )
+    {
+        if ( $relname == 'books' )
+        {
+            $req = 'DELETE FROM bookgenre
+                     where bid = '.intval($id).'
+                       and gid = '.intval($this->id);
+        }
+        else
+            return parent::delRelFKFromDB( $relname, $id );
+
+        $query = App::$dbh->prepare($req);
+
+        try
+        {
+            $query->execute(  );
+        }
+        catch (Exception $e)
+        {
+            App::$dbh->rollback();
+            throw new \Exception('Cannot del from DB: '.$req.';'. $e->getMessage());
+        }
+
+        return true;
+    }
 }
+
+

@@ -64,7 +64,6 @@ class BookHandler implements RequestHandlerInterface
     public function createResource(RequestInterface $request): ResponseInterface
     {
         $resource = new BookResource();
-        //print_r($request->requestBody()->data()->all()[0]->attributes());
         //$request = Server\JsonApiServer::createResponseBody($request);
         $resource->add($request->requestBody()->data()->all()[0]);
         $document = new BookDocument($resource, $request);
@@ -107,7 +106,6 @@ class BookHandler implements RequestHandlerInterface
         //try to add related resources into the document included
         $resource->load_relationship( $request );
         $document = new BookDocument($resource, $request);
-        //print_r($document);
         return new \Enm\JsonApi\Model\Response\DocumentResponse($document);
     }
 }

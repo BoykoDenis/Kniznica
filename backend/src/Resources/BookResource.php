@@ -74,7 +74,6 @@ class BookResource extends AbstractResource
     {
         $req = 'UPDATE books SET title=?, date_published=?, isbn=? WHERE id=?';
         $query = APP::$dbh->prepare($req);
-        print_r([$rawdata['title'], $rawdata['date_published'], $rawdata['isbn'], $id]);
         try
         {
             $query->execute( array($rawdata['title'], $rawdata['date_published'], $rawdata['isbn'], $id) );
