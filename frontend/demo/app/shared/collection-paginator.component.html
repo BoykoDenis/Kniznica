@@ -1,7 +1,7 @@
 <nav aria-label="Pagination">
     <ul class="pagination justify-content-center">
         <li class="page-item {{ collection.page.number < 2 ? 'disabled' : '' }}">
-            <a class="page-link" [routerLink]="['./']" [queryParams]="{ page: collection.page.number - 1 }" tabindex="-1">
+            <a class="page-link" [routerLink]="['./']" [queryParams]="{ page: (collection.page.number < 2 ? 1 : (collection.page.number - 1)) }" tabindex="-1">
                 Previous
             </a>
         </li>
@@ -14,7 +14,7 @@
             <li class="page-item"><a class="page-link" href="#">3</a></li>
         -->
         <li class="page-item {{ !collection.hasMorePages() ? 'disabled' : '' }}">
-            <a class="page-link" [routerLink]="['./']" [queryParams]="{ page: (collection.page.number + 1) }">
+            <a class="page-link" [routerLink]="['./']" [queryParams]="{ page: (collection.hasMorePages() ? (collection.page.number + 1) : collection.page.number) }">
                 Next
             </a>
         </li>
@@ -22,5 +22,5 @@
 </nav>
 
 <p class="text-muted">
-    Demo data comes from <a href="//jsonapiplayground.reyesoft.com/" target="_bank">JSON:API playground</a>.
+    Frontend section is based on demo application for <a href="https://github.com/reyesoft/ngx-jsonapi" target="_blank">ngx-jsonapi</a>.
 </p>
