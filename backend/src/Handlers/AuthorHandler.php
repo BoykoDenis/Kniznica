@@ -73,6 +73,7 @@ class AuthorHandler implements RequestHandlerInterface
     public function createResource(RequestInterface $request): ResponseInterface
     {
         $resource = new AuthorResource();
+        print_r($request);
         //print_r($request->requestBody()->data()->all()[0]->attributes());
         //$request = Server\JsonApiServer::createResponseBody($request);
         $resource->add($request->requestBody()->data()->all()[0]);

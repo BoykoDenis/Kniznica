@@ -134,6 +134,11 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
         }
     }
 
+    protected function addRelFKToDB( string $relname, $id )
+    {
+
+    }
+
     /**
      * @return Resource
      */
@@ -188,23 +193,23 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
             }
         }
 
-	// Add new relationships records
-        foreach(array_keys($idlist) as $id)
-	{
-	    if ( !array_key_exists($id, $dbidlist) )
-	    {
-	        $this->addRelFKToDB($relname, $id);
-	    }
-	}
+        // Add new relationships records
+            foreach(array_keys($idlist) as $id)
+        {
+            if ( !array_key_exists($id, $dbidlist) )
+            {
+                $this->addRelFKToDB($relname, $id);
+            }
+        }
 
-	// Remove deleted relationships records
-	foreach(array_keys($dbidlist) as $id)
-	{
-	    if ( !array_key_exists($id, $idlist) )
-	    {
-	        $this->delRelFKFromDB($relname, $id);
-	    }
-	}
+        // Remove deleted relationships records
+        foreach(array_keys($dbidlist) as $id)
+        {
+            if ( !array_key_exists($id, $idlist) )
+            {
+                $this->delRelFKFromDB($relname, $id);
+            }
+        }
     }
 
     public function edit( Object $data )
@@ -326,6 +331,11 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
     {
         // return empty collection
         return new ResourceCollection();
+    }
+
+    protected function getRelationshipIdList( string $relname )
+    {
+        return [];
     }
 
     /**
