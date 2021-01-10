@@ -1,7 +1,7 @@
 <table class="table table-condensed">
     <tr>
         <td>
-<h3 *ngIf="author.id > 0">Author #{{ author.id }}, with books and photos</h3>
+<h3 *ngIf="author.id > 0">{{ author.attributes.name }}</h3>
 <h3 *ngIf="author.id == 0">Add new author</h3>
         </td>
         <td class="text-right"><a routerLink="/authors">Return to Authors List</a></td>
@@ -79,6 +79,18 @@
     />
 </span>
 -->
+
+<table class="table table-condensed">
+    <tr>
+        <td>
+<h4>
+Genres:
+<span *ngFor="let genre of author.relationships.genres.data" style="margin-left:5px" class="label label-default">&nbsp;{{ genre.attributes.gname }}&nbsp;</span>
+</h4>
+        </td>
+    </tr>
+</table>
+
 
 <table class="table table-condensed">
     <tr>

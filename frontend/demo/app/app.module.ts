@@ -8,6 +8,7 @@ import { NgxJsonapiModule, JSONAPI_RIPPER_SERVICE, JSONAPI_STORE_SERVICE } from 
 import { AppComponent } from './app.component';
 import { AuthorsService } from './authors/authors.service';
 import { BooksService } from './books/books.service';
+import { GenresService } from './genres/genres.service';
 import { PhotosService } from './photos/photos.service';
 import { SharedModule } from './shared/shared.module';
 
@@ -30,6 +31,10 @@ const appRoutes: Routes = [
     {
         path: 'books',
         loadChildren: './books/books.module#BooksModule'
+    },
+    {
+        path: 'genres',
+        loadChildren: './genres/genres.module#GenresModule'
     }
 ];
 
@@ -45,6 +50,7 @@ const appRoutes: Routes = [
         },
         AuthorsService,
         BooksService,
+        GenresService,
         PhotosService
     ],
     imports: [
