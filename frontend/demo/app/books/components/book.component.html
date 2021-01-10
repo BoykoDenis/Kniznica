@@ -8,26 +8,86 @@
     </tr>
 </table>
 
+
 <demo-resource-info [resource]="book"></demo-resource-info>
+<!--
 <ul>
     <li>Title: <strong>{{ book.attributes.title }}</strong></li>
     <li>Date Published: <strong>{{ book.attributes.date_published | date }}</strong></li>
 </ul>
+-->
 
-<h4>Author (one)</h4>
-<p><small>This a relationship with <i>hasMany:false</i></small></p>
-<ul>
-    <li>Name: <strong>{{ getAuthorName(book) }}</strong></li>
-</ul>
+<!-- http://www.java2s.com/Tutorials/HTML_CSS/Bootstrap_Example/Form/0060__form_horizontal.htm -->
+<div class="container">
+    <h4>Book Information</h4>
+    <form #bookForm="ngForm" (ngSubmit)="onFormSubmit(bookForm)" class="form-horizontal">
+      <div class="form-group">
+        <label for="title" class="col-lg-2 control-label">Title:</label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="title" required
+        	[(ngModel)]="book.attributes.title" name="title"
+        	#btitle="ngModel" [readonly]="!isEditMode">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="date_published" class="col-lg-2 control-label">Publish date:</label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="date_published"
+        	[(ngModel)]="book.attributes.date_published" name="date_published"
+        	#bpdate="ngModel" [readonly]="!isEditMode">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="isbn" class="col-lg-2 control-label">ISBN:</label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="isbn"
+        	[(ngModel)]="book.attributes.isbn" name="isbn"
+        	#bisbn="ngModel" [readonly]="!isEditMode">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10" *ngIf="isEditMode">
+	      <button type="submit" class="btn btn-success">Submit</button>
+	      <button type="button" class="btn btn-cancel" (click)="onCancel()">Cancel</button>
+        </div>
+        <div class="col-lg-offset-2 col-lg-10" *ngIf="!isEditMode">
+	      <button type="button" class="btn" (click)="onEdit()">Edit</button>
+        </div>
+      </div>
+    </form>
+</div>
 
-<h4>Photos (many)</h4>
-<p><small>This a relationship with <i>hasMany:true</i></small></p>
-<ul *ngIf="book.relationships.photos.builded">
-    <li *ngFor="let photo of book.relationships.photos.data">
-        URI: <a href="{{ photo.attributes.uri }}">{{ photo.attributes.uri }}</a>
-    </li>
-</ul>
 
-<p>
-    <a routerLink="/books">Volver</a>
-</p>
+<table class="table table-condensed">
+    <tr>
+        <td>
+<h4>
+Genres:
+<span *ngFor="let genre of book.relationships.genres.data" style="margin-left:5px" class="label label-default">&nbsp;{{ genre.attributes.gname }}&nbsp;
+<a (click)="removeGenre(genre)" title="Remove genre from book"><small>X</small></a>
+</span>
+</h4>
+        </td>
+        <td>
+            <button (click)="addGenre()">Add Genre</button>
+        </td>
+    </tr>
+</table>
+
+
+
+<table class="table table-condensed">
+    <tr>
+        <td>
+<h4>
+Authors:
+<span *ngFor="let author of book.relationships.authors.data" style="margin-left:5px" class="label label-default">&nbsp;{{ author.attributes.name }}&nbsp;
+<a (click)="removeAuthor(author)" title="Remove Author from book"><small>X</small></a>
+</span>
+</h4>
+        </td>
+        <td>
+            <button (click)="addAuthor()">Add Author</button>
+        </td>
+    </tr>
+</table>

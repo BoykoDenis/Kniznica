@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Autoregister, Service, Resource, DocumentCollection, DocumentResource } from 'ngx-jsonapi';
 import { Author } from '../authors/authors.service';
+import { Genre } from '../genres/genres.service';
 import { Photo } from '../photos/photos.service';
 
 export class Book extends Resource {
     public attributes = {
         date_published: '',
         title: '',
-        created_at: '',
-        updated_at: ''
+        isbn: ''
     };
 
     public relationships = {
-        author: new DocumentResource<Author>(),
+        authors: new DocumentCollection<Author>(),
+        genres: new DocumentCollection<Genre>(),
         photos: new DocumentCollection<Photo>()
     };
 }
@@ -22,7 +23,7 @@ export class BooksService extends Service<Book> {
     public resource = Book;
     public type = 'books';
     public ttl = 1;
-
+/*
     // executed before get data from server
     public parseFromServer(attributes): void {
         attributes.title = '📖 ' + attributes.title;
@@ -34,4 +35,5 @@ export class BooksService extends Service<Book> {
             attributes.title = attributes.title.replace('📖 ', '');
         }
     }
+*/
 }

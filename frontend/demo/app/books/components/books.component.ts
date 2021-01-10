@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Resource, DocumentCollection } from 'ngx-jsonapi';
 import { BooksService, Book } from './../books.service';
 import { AuthorsService } from './../../authors/authors.service';
+import { GenresService } from '../../genres/genres.service';
 import { PhotosService } from '../../photos/photos.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -16,13 +17,15 @@ export class BooksComponent {
         private route: ActivatedRoute,
         protected authorsService: AuthorsService,
         protected booksService: BooksService,
+        protected genresService: GenresService
         protected photosService: PhotosService
     ) {
         route.queryParams.subscribe(({ page }) => {
             booksService
                 .all({
-                    page: { number: page || 1 },
-                    include: ['author', 'photos']
+                    sort: ['title'],
+                    page: { number: page || 1, size: 5 },
+                    ttl: 3600
                 })
                 .subscribe(
                     books => {
@@ -58,6 +61,7 @@ export class BooksComponent {
     }
 
     public delete(book: Resource) {
-        this.booksService.delete(book.id);
+        if ( confirm( 'Are you sure to delete book: ' + book.attributes.title ) )
+            this.booksService.delete(book.id);
     }
 }
