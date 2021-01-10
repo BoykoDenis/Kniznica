@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { DocumentCollection } from 'ngx-jsonapi';
 import { AuthorsService, Author } from './../authors.service';
 import { ActivatedRoute } from '@angular/router';
+import { Resource } from 'ngx-jsonapi';
 
 @Component({
     selector: 'demo-authors',
