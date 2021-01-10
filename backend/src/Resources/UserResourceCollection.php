@@ -30,31 +30,34 @@ class UserResourceCollection extends AbstractResourceCollection
 		//print_r($data);
 	}
 
-    protected function loadFromDB(): ResourceCollectionInterface
+    protected function loadFromDB( $query = null ): ResourceCollectionInterface
     {
-        // gather data from DB and generate the collection
-		$db = new App();
+		if ( $query )
+        {
+            $req = $query;
+        }
+        else
+        {
+            $req = 'SELECT * FROM users';
 
-		$req = 'SELECT * FROM users';
-
-		if ( $this->limit() )
-		{
-			if (!$this->offset())
-			{
-				$this->offset = 0;
-			}
-			$req .= ' LIMIT '.intval($this->limit).' OFFSET '.intval($this->offset);
-		}
-
-		$query = $db::$dbh->prepare($req);
+            if ( $this->limit() )
+            {
+                if (!$this->offset())
+                {
+                    $this->offset = 0;
+                }
+                $req .= ' LIMIT '.intval($this->limit).' OFFSET '.intval($this->offset);
+            }
+        }
+        $query = App::$dbh->prepare($req);
 		$query->execute();
 
-		while($row = $query->fetch(\PDO::FETCH_ASSOC))
-		{
-			$rec = new UserResource();
-			$rec->load($row);
-			$this->set($rec);
-		}
+        while($row = $query->fetch(\PDO::FETCH_ASSOC))
+        {
+            $rec = new UserResource();
+            $rec->load($row);
+            $this->set($rec);
+        }
 
         return $this;
     }

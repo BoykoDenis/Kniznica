@@ -56,28 +56,26 @@ class AuthorResource extends AbstractResource
     protected function addToDB( $rawdata )
     {
 
-        $db = new App();
         $req = "INSERT INTO authors (name, date_of_birth, date_of_death) VALUE (?, ?, ?)";
-        $query = $db::$dbh->prepare($req);
+        $query = App::$dbh->prepare($req);
 
         try
         {
             $query->execute( [$rawdata['name'], $rawdata['date_of_birth'], $rawdata['date_of_death']] );
-            $this->id = $db::$dbh->lastInsertId();
+            $this->id = App::$dbh->lastInsertId();
             $this->loadById( $this->id );
         }
         catch (Exception $e)
         {
-            $db::$dbh->rollback();
+            App::$dbh->rollback();
             throw new \Exception('Load Failed: '. $e->getMessage());
         }
     }
 
     protected function editInDB( string $id, array $rawdata )
     {
-        $db = new App();
         $req = 'UPDATE authors SET name=?, date_of_birth=?, date_of_death=? WHERE id=?';
-        $query = $db::$dbh->prepare($req);
+        $query = App::$dbh->prepare($req);
         try
         {
             $query->execute( [$rawdata['name'], $rawdata['date_of_birth'], $rawdata['date_of_death'], $id]);
@@ -85,23 +83,22 @@ class AuthorResource extends AbstractResource
         }
         catch (Exception $e)
         {
-            $db::$dbh->rollback();
+            App::$dbh->rollback();
             throw new \Exception('Patch Failed: '. $e->getMessage());
         }
     }
 
     protected function deleteFromDB( string $id )
     {
-        $db = new App();
         $req = 'DELETE FROM authors WHERE id=?';
-        $query = $db::$dbh->prepare($req);
+        $query = App::$dbh->prepare($req);
         try
         {
             $query->execute( [$id] );
         }
         catch (Exception $e)
         {
-            $db::$dbh->rollback();
+            App::$dbh->rollback();
             throw new \Exception('Deletion Failed: '. $e->getMessage());
         }
     }
