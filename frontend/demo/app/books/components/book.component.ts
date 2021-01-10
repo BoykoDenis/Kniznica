@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 // Add Router to be able to navigate from code (this.router.navigate(...)
 import { ActivatedRoute, Router } from '@angular/router';
-import { Resource } from 'ngx-jsonapi';
+import { Resource, DocumentCollection } from 'ngx-jsonapi';
 import { AuthorsService } from '../../authors/authors.service';
-import { GenresService } from '../../genres/genres.service';
+import { Genre, GenresService } from '../../genres/genres.service';
 import { BooksService, Book } from './../books.service';
 import { PhotosService } from '../../photos/photos.service';
 
@@ -16,6 +16,7 @@ import { FormControl, NgForm } from '@angular/forms';
 })
 export class BookComponent {
     public book: Book;
+    public genres: DocumentCollection<Genre>;
 
     // Flags for form modes
     public isEditMode: boolean = false;
@@ -46,6 +47,8 @@ export class BookComponent {
               this.isEditMode = true;
           }
         });
+
+        this.getAllGenres();
     }
 
     public turnEditMode( mode: boolean ) {
@@ -110,6 +113,23 @@ export class BookComponent {
             );
     }
 
+    public addThisGenre( genre ) {
+
+        let newgenreid = ''+genre.id
+        this.genresService.get(newgenreid).subscribe(
+                genre => {
+                    console.log('success genre', genre);
+                    this.book.addRelationship(genre);
+
+                    this.book.save( { include: ['genres'] } ).subscribe(success => {
+                    console.log('book saved', this.book.toObject());
+                    });
+                },
+                error => alert('Cannot find genre with id:'+newgenreid)
+            );
+        return false;
+    }
+
     public removeGenre( genre: Resource ) {
         if ( confirm( 'Are you sure to unlink genre ['+ genre.attributes.gname +'] from book' ) ) {
             this.book.removeRelationship('genres', genre.id);
@@ -145,6 +165,21 @@ export class BookComponent {
             this.book.save( { include: ['authors'] } );
             console.log('removeRelationship save with authors include', this.book.toObject());
         }
+    }
+
+
+    public getAllGenres() {
+
+        let genres$ = this.genresService.all({});
+        genres$.subscribe(
+            genres => {
+                this.genres = genres;
+
+                console.log('success genres controller', this.genres);
+            },
+            error => console.info('error genres controller', error)
+        );
+        genres$.toPromise().then(success => console.log('genres loaded PROMISE'));
     }
 
 

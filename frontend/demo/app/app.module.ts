@@ -40,6 +40,7 @@ const appRoutes: Routes = [
 
 @NgModule({
     providers: [
+/*
         {
             provide: JSONAPI_RIPPER_SERVICE,
             useClass: JsonRipper
@@ -48,6 +49,7 @@ const appRoutes: Routes = [
             provide: JSONAPI_STORE_SERVICE,
             useClass: StoreService
         },
+*/
         AuthorsService,
         BooksService,
         GenresService,
@@ -59,7 +61,9 @@ const appRoutes: Routes = [
         SharedModule,
         RouterModule.forRoot(appRoutes, { useHash: true }),
         NgxJsonapiModule.forRoot({
-            url: environment.jsonapi_url
+            url: environment.jsonapi_url,
+            // try to avoid cache
+            cache_prerequests: false
         }),
         // Add forms
         FormsModule

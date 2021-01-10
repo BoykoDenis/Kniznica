@@ -68,8 +68,17 @@ Genres:
 </span>
 </h4>
         </td>
-        <td class="text-right">
-            <button (click)="addGenre()">Add Genre</button>
+        <td class="text-right" width=100>
+<div class="dropup pull-right">
+<button class="btn btn-default dropdown-toggle" type="button"
+  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+Add Genre
+<span class="caret"></span>
+</button>
+<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="add-genre">
+<li *ngFor="let genre of genres.data"><a href="#" (click)="addThisGenre(genre)">{{ genre.attributes.gname }}</a></li>
+</ul>
+</div>
         </td>
     </tr>
 </table>
