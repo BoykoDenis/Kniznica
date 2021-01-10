@@ -17,7 +17,7 @@ export class BooksComponent {
         private route: ActivatedRoute,
         protected authorsService: AuthorsService,
         protected booksService: BooksService,
-        protected genresService: GenresService
+        protected genresService: GenresService,
         protected photosService: PhotosService
     ) {
         route.queryParams.subscribe(({ page }) => {

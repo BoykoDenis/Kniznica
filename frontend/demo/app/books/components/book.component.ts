@@ -88,4 +88,65 @@ export class BookComponent {
             }
         });
     }
+
+    public addGenre() {
+
+        let newgenreid = prompt('Link to genre (id):', '');
+        if ( !newgenreid || parseInt(newgenreid) < 1 )
+        {
+            return;
+        }
+        newgenreid = ''+parseInt(newgenreid)
+        this.genresService.get(newgenreid).subscribe(
+                genre => {
+                    console.log('success genre', genre);
+                    this.book.addRelationship(genre);
+
+                    this.book.save( { include: ['genres'] } ).subscribe(success => {
+                        console.log('book saved', this.book.toObject());
+                    });
+                },
+                error => alert('Cannot find genre with id:'+newgenreid)
+            );
+    }
+
+    public removeGenre( genre: Resource ) {
+        if ( confirm( 'Are you sure to unlink genre ['+ genre.attributes.gname +'] from book' ) ) {
+            this.book.removeRelationship('genres', genre.id);
+            this.book.save( { include: ['genres'] } );
+            console.log('removeRelationship save with genres include', this.book.toObject());
+        }
+    }
+
+    public addAuthor() {
+
+        let newauthorid = prompt('Link to author (id):', '');
+        if ( !newauthorid || parseInt(newauthorid) < 1 )
+        {
+            return;
+        }
+        newauthorid = ''+parseInt(newauthorid)
+        this.authorsService.get(newauthorid).subscribe(
+                author => {
+                    console.log('success author', author);
+                    this.book.addRelationship(author);
+
+                    this.book.save( { include: ['authors'] } ).subscribe(success => {
+                        console.log('book saved', this.book.toObject());
+                    });
+                },
+                error => alert('Cannot find author with id:'+newauthorid)
+            );
+    }
+
+    public removeAuthor( author: Resource ) {
+        if ( confirm( 'Are you sure to unlink author ['+ author.attributes.name +'] from book' ) ) {
+            this.book.removeRelationship('authors', author.id);
+            this.book.save( { include: ['authors'] } );
+            console.log('removeRelationship save with authors include', this.book.toObject());
+        }
+    }
+
+
+
 }
