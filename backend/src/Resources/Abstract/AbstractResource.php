@@ -136,7 +136,7 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
 
     protected function addRelFKToDB( string $relname, $id )
     {
-
+        return false;
     }
 
     /**
@@ -150,7 +150,6 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
         if (array_key_exists('include', $query))
         {
             $includes = explode(',', $query['include']);
-            //print_r($includes);
             $map = $this->getAllowedRelationshipsList();
             foreach( $includes as $relname )
             {
@@ -226,6 +225,11 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
         {
             return $this->deleteFromDB( $data->id() );
         }
+    }
+
+    protected function delRelFKFromDB( String $relname, $id )
+    {
+        return false;
     }
 
     /**
@@ -374,7 +378,7 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
         }
         return $this;
     }
-
+/*
     public function load_relationship( RequestInterface $request )
     {
         $relationsIDnames = array
@@ -458,7 +462,7 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
             $this->relationshipCollection->set( $rel );
         }
     }
-
+*/
     protected function getRelatedIDs( string $relationshipname, string $mainID, string $mainIDname, string $relatedIDname )
     {
         $db = new App();

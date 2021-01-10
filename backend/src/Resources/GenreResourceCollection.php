@@ -23,7 +23,6 @@ class GenreResourceCollection extends AbstractResourceCollection
 	public function __construct(array $data = [])
 	{
 		parent::__construct( $data );
-		//print_r($data);
 	}
 
 

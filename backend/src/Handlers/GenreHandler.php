@@ -64,7 +64,6 @@ class GenreHandler implements RequestHandlerInterface
     public function createResource(RequestInterface $request): ResponseInterface
     {
         $resource = new GenreResource();
-        //print_r($request->requestBody()->data()->all()[0]->attributes());
         //$request = Server\JsonApiServer::createResponseBody($request);
         $resource->add($request->requestBody()->data()->all()[0]);
         $document = new GenreDocument($resource, $request);
@@ -107,7 +106,6 @@ class GenreHandler implements RequestHandlerInterface
         //try to add related resources into the document included
         $resource->load_relationship( $request );
         $document = new GenreDocument($resource, $request);
-        //print_r($document);
         return new \Enm\JsonApi\Model\Response\DocumentResponse($document);
     }
 }

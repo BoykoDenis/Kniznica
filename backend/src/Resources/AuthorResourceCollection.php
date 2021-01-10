@@ -25,7 +25,6 @@ class AuthorResourceCollection extends AbstractResourceCollection
 	public function __construct(array $data = [])
 	{
 		parent::__construct( $data );
-		//print_r($data);
 	}
 
     protected function loadFromDB( $query = null ): ResourceCollectionInterface

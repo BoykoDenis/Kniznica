@@ -44,9 +44,8 @@ class AuthorResource extends AbstractResource
     {
         // Here add loading by id from DB
         // and the call $this->loadByArray with gather from DB data
-        $db = new App();
         $req = "SELECT * FROM authors WHERE id = ?";
-        $query = $db::$dbh->prepare( $req );
+        $query = App::$dbh->prepare( $req );
         $query->execute( [$id] );
         $dbdata = $query->fetch( \PDO::FETCH_ASSOC );
 
@@ -145,7 +144,7 @@ class AuthorResource extends AbstractResource
         {
             $req = 'select bid as id
                         from authorbook
-                        where aid = '.intval($this->id);
+                            where aid = '.intval($this->id);
         }
         elseif ( $relname == 'genres' )
         {
