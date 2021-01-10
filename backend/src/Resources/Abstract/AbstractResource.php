@@ -145,12 +145,12 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
     public function saveByRequest( RequestInterface $request ): ResourceInterface
     {
         $this->loadById($request->id());
-
         $requestUri = $request->uri();
         parse_str($requestUri->getQuery(), $query);
         if (array_key_exists('include', $query))
         {
             $includes = explode(',', $query['include']);
+            //print_r($includes);
             $map = $this->getAllowedRelationshipsList();
             foreach( $includes as $relname )
             {
@@ -237,6 +237,7 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
 
         if ( $request->requestsRelationships() )
         {
+
             $this->loadRelationshipsByRequest( $request );
         }
 

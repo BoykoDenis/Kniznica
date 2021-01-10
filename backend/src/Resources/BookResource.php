@@ -53,29 +53,27 @@ class BookResource extends AbstractResource
 
     protected function addToDB( $rawdata )
     {
-        print_r($rawdata);
-        $db = new App();
+
         $req = "INSERT INTO books (title, date_published, isbn) VALUE (?, ?, ?)";
-        $query = $db::$dbh->prepare($req);
+        $query = App::$dbh->prepare($req);
 
         try
         {
             $query->execute( [$rawdata['title'], $rawdata['date_published'], $rawdata['isbn']] );
-            $this->id = $db::$dbh->lastInsertId();
+            $this->id = App::$dbh->lastInsertId();
             $this->loadById( $this->id );
         }
         catch (Exception $e)
         {
-            $db::$dbh->rollback();
+            App::$dbh->rollback();
             throw new \Exception('Load Failed: '. $e->getMessage());
         }
     }
 
     protected function editInDB( string $id, array $rawdata )
     {
-        $db = new App();
         $req = 'UPDATE books SET title=?, date_published=?, isbn=? WHERE id=?';
-        $query = $db::$dbh->prepare($req);
+        $query = APP::$dbh->prepare($req);
         print_r([$rawdata['title'], $rawdata['date_published'], $rawdata['isbn'], $id]);
         try
         {
@@ -84,36 +82,110 @@ class BookResource extends AbstractResource
         }
         catch (Exception $e)
         {
-            $db::$dbh->rollback();
+            App::$dbh->rollback();
             throw new \Exception('Patch Failed: '. $e->getMessage());
         }
     }
 
     protected function deleteFromDB( string $id )
     {
-        $db = new App();
         $req = 'DELETE FROM books WHERE id=?';
-        $query = $db::$dbh->prepare($req);
+        $query = App::$dbh->prepare($req);
         try
         {
             $query->execute( [$id] );
         }
         catch (Exception $e)
         {
-            $db::$dbh->rollback();
+            App::$dbh->rollback();
             throw new \Exception('Deletion Failed: '. $e->getMessage());
         }
     }
-/*
-    protected function createByArray( array $ids )
+    protected function getAllowedRelationshipsList()
     {
-        foreach($ids as $id)
-		{
-			$res = new BookResource();
-			$res->loadById( $id );
-			$rels[] = $res;
-		}
-        return $rels;
+        return ['authors'=>'authors',
+                'genres'=>'genres'];
     }
-    */
+
+    protected function getRelationshipDataCollection( $relname )
+    {
+        if ( $relname == 'authors' )
+        {
+            $col = new AuthorResourceCollection();
+            $req = 'select distinct a.*
+                        from authors a
+                          inner join authorbook ab
+                            on ab.aid = a.id
+                        where ab.bid = '.intval($this->id);
+        }
+        elseif( $relname == 'genres' )
+        {
+            $col = new GenreResourceCollection();
+            $req = 'select distinct g.*
+                        from genres g
+                            inner join bookgenre bg
+                                on bg.gid = g.id
+                        where bg.bid = '.intval($this->id);
+        }
+        else
+            return parent::getRelationshipDataCollection( $relname );
+
+        $col->load($req);
+        return $col;
+    }
+
+    protected function getRelationshipIdList( String $relname )
+    {
+        if ( $relname == 'authors' )
+        {
+            $req = 'select aid as id
+                        from authorbook
+                        where bid = '.intval($this->id);
+        }
+        elseif ( $relname == 'genres' )
+        {
+            $req = 'select gid as id
+                        from bookgenre
+                            where bid = '.intval($this->id);
+        }
+        else
+            return parent::getRelationshipIdList( $relname );
+
+        $query = App::$dbh->prepare($req);
+        $query->execute();
+
+        $idlist = [];
+        while($row = $query->fetch(\PDO::FETCH_ASSOC))
+        {
+           $idlist[] = $row['id'];
+        }
+
+        return $idlist;
+    }
+
+    protected function addRelFKToDB( String $relname, $id )
+    {
+        if ( $relname == 'authors' )
+        {
+            $req = 'INSERT INTO authorbook (aid, bid) VALUE ('
+                     .intval($id).','
+                     .intval($this->id).')';
+        }
+        else
+            return parent::addRelFKToDB( $relname, $id );
+
+        $query = App::$dbh->prepare($req);
+
+        try
+        {
+            $query->execute(  );
+        }
+        catch (Exception $e)
+        {
+            App::$dbh->rollback();
+            throw new \Exception('Cannot add to DB: '.$req.';'. $e->getMessage());
+        }
+
+        return true;
+    }
 }

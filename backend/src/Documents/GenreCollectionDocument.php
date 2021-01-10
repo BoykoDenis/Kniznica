@@ -9,9 +9,6 @@ use Enm\JsonApi\Model\Resource\ResourceCollectionInterface;
 
 require_once(__DIR__."/Abstract/AbstractCollectionDocument.php");
 
-/**
- * @author Serge Boyko <s.boyko@gmail.com>
- */
 class GenreCollectionDocument extends AbstractCollectionDocument
 {
 
