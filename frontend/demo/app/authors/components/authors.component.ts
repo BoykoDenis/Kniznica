@@ -28,4 +28,10 @@ export class AuthorsComponent {
                 );
         });
     }
+
+    public delete(author: Resource) {
+        if ( confirm( 'Are you sure to delete author: ' + author.attributes.name ) )
+            this.authorsService.delete(author.id);
+    }
+
 }

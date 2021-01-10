@@ -98,10 +98,12 @@ export class AuthorComponent {
             );
     }
 
-    public removeBook( bookId ) {
-        this.author.removeRelationship('books', bookId);
-        this.author.save( { include: ['books'] } );
-        console.log('removeRelationship save with photos include', this.author.toObject());
+    public removeBook( book: Resource ) {
+        if ( confirm( 'Are you sure to unlink book ['+ book.attributes.title +'] from author' ) ) {
+            this.author.removeRelationship('books', book.id);
+            this.author.save( { include: ['books'] } );
+            console.log('removeRelationship save with photos include', this.author.toObject());
+        }
     }
 
     public turnEditMode( mode: boolean ) {

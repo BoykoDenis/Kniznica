@@ -101,8 +101,6 @@ Genres:
     </tr>
 </table>
 
-
-
 <demo-collection-info [collection]="author.relationships.books"></demo-collection-info>
 <table class="table table-striped" *ngIf="author.relationships.books.builded">
     <thead>
@@ -120,7 +118,7 @@ Genres:
         </td>
         <td>{{ book.attributes.date_published | date }}</td>
         <td class="text-right">
-            <button (click)="removeBook(book.id)">Remove Book</button>
+            <a (click)="removeBook(book)" title="Remove Book from author"><small>REMOVE</small></a>
         </td>
     </tr>
 </table>

@@ -14,7 +14,8 @@
             <th>Date of birth</th>
             <th>Date of dead</th>
             <th>Books</th>
-            <th>Photos</th>
+<!--            <th>Photos</th> -->
+            <th width="60">&nbsp;</th>
         </tr>
     </thead>
     <tr *ngFor="let author of authors.data; trackBy: authors.trackBy">
@@ -33,10 +34,14 @@
                 and {{ author.relationships.books.data.length}} more...
             </span>
         </td>
+<!--
         <td>
             {{ author.relationships.photos.data.length }}
         </td>
-        <!-- <td><button (click)="delete(author)">Delete</button></td> -->
+-->
+        <td class="text-right">
+            <a (click)="delete(author)" title="Delele author"><small>DELETE</small></a>
+        </td>
     </tr>
 </table>
 <demo-collection-paginator [collection]="authors"></demo-collection-paginator>
