@@ -5,6 +5,7 @@ import { Resource } from 'ngx-jsonapi';
 import { PhotosService } from '../../photos/photos.service';
 import { AuthorsService, Author } from '../authors.service';
 import { BooksService } from '../../books/books.service';
+import { GenresService } from '../../genres/genres.service';
 
 // Add Form control
 import { FormControl, NgForm } from '@angular/forms';
@@ -25,6 +26,7 @@ export class AuthorComponent {
         protected authorsService: AuthorsService,
         protected photosService: PhotosService,
         protected booksService: BooksService,
+        protected genresService: GenresService,
         // init router
         private router: Router,
         private route: ActivatedRoute
@@ -32,7 +34,7 @@ export class AuthorComponent {
         route.params.subscribe(({ id }) => {
           // Add processing id = 0 for add new records
           if ( id > 0 ) {
-            authorsService.get(id, { include: ['books', 'photos'], ttl: 100 }).subscribe(
+            authorsService.get(id, { include: ['books', 'genres'], ttl: 100 }).subscribe(
                 author => {
                     this.author = author;
                     console.log('author loaded for id', id);
