@@ -1,6 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
+
+// Add cookie sending
+import { AuthInterceptor } from './services/auth.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+
 import { HttpClientModule } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { NgxJsonapiModule, JSONAPI_RIPPER_SERVICE, JSONAPI_STORE_SERVICE } from 'ngx-jsonapi';
@@ -40,6 +45,7 @@ const appRoutes: Routes = [
 
 @NgModule({
     providers: [
+// Comment next lines in attempt to remove caching
 /*
         {
             provide: JSONAPI_RIPPER_SERVICE,
@@ -50,6 +56,13 @@ const appRoutes: Routes = [
             useClass: StoreService
         },
 */
+        // Add cookie sending
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptor,
+            multi: true,
+        },
+
         AuthorsService,
         BooksService,
         GenresService,
