@@ -170,6 +170,12 @@ class BookResource extends AbstractResource
                      .intval($id).','
                      .intval($this->id).')';
         }
+        if ( $relname == 'genres' )
+        {
+            $req = 'INSERT INTO bookgenre (bid, gid) VALUE ('
+                     .intval($this->id).','
+                     .intval($id).')';
+        }
         else
             return parent::addRelFKToDB( $relname, $id );
 
@@ -183,6 +189,38 @@ class BookResource extends AbstractResource
         {
             App::$dbh->rollback();
             throw new \Exception('Cannot add to DB: '.$req.';'. $e->getMessage());
+        }
+
+        return true;
+    }
+
+    protected function delRelFKFromDB( String $relname, $id )
+    {
+        if ( $relname == 'authors' )
+        {
+            $req = 'DELETE FROM authorbook
+                     where aid = '.intval($id).'
+                       and bid = '.intval($this->id);
+        }
+        elseif ( $relname == 'genres' )
+        {
+            $req = 'DELETE FROM bookgenre
+                    WHERE bid = '.intval($this->id).'
+                      and gid = '.intval($id);
+        }
+        else
+            return parent::delRelFKFromDB( $relname, $id );
+
+        $query = App::$dbh->prepare($req);
+
+        try
+        {
+            $query->execute(  );
+        }
+        catch (Exception $e)
+        {
+            App::$dbh->rollback();
+            throw new \Exception('Cannot del from DB: '.$req.';'. $e->getMessage());
         }
 
         return true;

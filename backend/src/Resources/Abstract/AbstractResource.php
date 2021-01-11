@@ -124,7 +124,7 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
 
     public function add( Object $data )
     {
-        if ($data)
+        if ($data instanceof JsonResource)
         {
             return $this->addToDB( $data->attributes()->all());
         }
@@ -153,6 +153,7 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
             $map = $this->getAllowedRelationshipsList();
             foreach( $includes as $relname )
             {
+
                 if ( $map[$relname] )
                 {
                     $related = $request->requestBody()->data()->all()[0]->relationships();
@@ -178,7 +179,6 @@ abstract class AbstractResource implements ResourceInterface, RelatedMetaInforma
         $dbidlist = $this->getRelationshipIdList( $relname );
         $dbidlist = array_flip($dbidlist);
         $idlist = [];
-
         if ( $relationships->has($relname) )
         {
             $rel = $relationships->get($relname);

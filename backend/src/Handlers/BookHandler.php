@@ -82,7 +82,7 @@ class BookHandler implements RequestHandlerInterface
     public function patchResource(RequestInterface $request): ResponseInterface
     {
         $resource = new BookResource();
-        $resource->edit($request->requestBody()->data()->all()[0]);
+        $resource->saveByRequest($request);
 
         $document = new BookDocument($resource, $request);
 

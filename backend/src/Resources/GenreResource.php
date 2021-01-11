@@ -58,7 +58,7 @@ class GenreResource extends AbstractResource
 
         try
         {
-            $query->execute( $rawdata['gname'] );
+            $query->execute( [$rawdata['gname']] );
             $this->id = App::$dbh->lastInsertId();
             $this->loadById( $this->id );
         }
