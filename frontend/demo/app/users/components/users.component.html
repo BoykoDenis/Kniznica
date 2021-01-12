@@ -1,0 +1,37 @@
+<table class="table table-condensed">
+    <tr>
+        <td><h3>Users</h3></td>
+        <td class="text-right"><a [routerLink]="['/users', 0]">Add new user</a></td>
+    </tr>
+</table>
+
+<demo-collection-info [collection]="users"></demo-collection-info>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>eMail</th>
+            <th>Role</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <!-- Use authors example. @deprected since version 2.0.0 -->
+    <tr *ngFor="let user of users.data; trackBy: users.trackBy">
+        <td>{{ user.id }}</td>
+        <td>
+            <a [routerLink]="['/users', user.id]">{{ user.attributes.uname }}</a>
+        </td>
+        <td>
+            <a href='mailto:{{ user.attributes.uemail }}'>{{ user.attributes.uemail }}</a>
+        </td>
+        <td>
+            <span *ngIf="user.attributes.privileges == 1">User</span>
+            <span *ngIf="user.attributes.privileges == 10">Admin</span>
+        </td>
+        <td class="text-right">
+            <a (click)="delete(user)" title="Delele user"><small>DELETE</small></a>
+        </td>
+    </tr>
+</table>
+<demo-collection-paginator [collection]="users"></demo-collection-paginator>

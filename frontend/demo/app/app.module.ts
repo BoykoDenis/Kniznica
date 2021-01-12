@@ -17,6 +17,9 @@ import { GenresService } from './genres/genres.service';
 import { PhotosService } from './photos/photos.service';
 import { SharedModule } from './shared/shared.module';
 
+// Added Users
+import { UsersService } from './users/users.service';
+
 import { StoreService } from 'ngx-jsonapi/sources/store.service';
 import { JsonRipper } from 'ngx-jsonapi/services/json-ripper';
 
@@ -40,6 +43,11 @@ const appRoutes: Routes = [
     {
         path: 'genres',
         loadChildren: './genres/genres.module#GenresModule'
+    },
+    // Added Users
+    {
+        path: 'users',
+        loadChildren: './users/users.module#UsersModule'
     }
 ];
 
@@ -66,7 +74,10 @@ const appRoutes: Routes = [
         AuthorsService,
         BooksService,
         GenresService,
-        PhotosService
+        PhotosService,
+
+        // Added Users
+        UsersService
     ],
     imports: [
         BrowserModule,

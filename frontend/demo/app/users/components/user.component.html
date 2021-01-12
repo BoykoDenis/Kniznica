@@ -1,0 +1,61 @@
+<table class="table table-condensed">
+    <tr>
+        <td>
+<h3 *ngIf="user.id > 0">{{ user.attributes.uname }}</h3>
+<h3 *ngIf="user.id == 0">Add new user</h3>
+        </td>
+        <td class="text-right"><a routerLink="/users">Return to Users List</a></td>
+    </tr>
+</table>
+
+<demo-resource-info [resource]="user"></demo-resource-info>
+
+<div class="container">
+    <form #userForm="ngForm" (ngSubmit)="onFormSubmit(userForm)" class="form-horizontal">
+      <div class="form-group">
+        <label for="uname" class="col-lg-2 control-label">Name:</label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="uname" required
+        	[(ngModel)]="user.attributes.uname" name="uname"
+        	#uname="ngModel" [readonly]="!isEditMode">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="uemail" class="col-lg-2 control-label">eMail:</label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="uemail" required
+        	[(ngModel)]="user.attributes.uemail" name="uemail"
+        	#uemail="ngModel" [readonly]="!isEditMode">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="upass" class="col-lg-2 control-label">Password:</label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="upass" required
+        	[(ngModel)]="user.attributes.upass" name="upass"
+        	#upass="ngModel" [readonly]="!isEditMode">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="privileges" class="col-lg-2 control-label">Role:</label>
+        <div class="col-lg-10">
+          <select class="form-control" id="privileges" required
+        	[(ngModel)]="user.attributes.privileges" name="privileges"
+        	#privileges="ngModel" [disabled]="!isEditMode">
+            <option value="1">User</option>
+            <option value="10">Admin</option>
+          </select>	
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10" *ngIf="isEditMode">
+	      <button type="submit" class="btn btn-success">Submit</button>
+	      <button type="button" class="btn btn-cancel" (click)="onCancel()">Cancel</button>
+        </div>
+        <div class="col-lg-offset-2 col-lg-10" *ngIf="!isEditMode">
+	      <button type="button" class="btn" (click)="onEdit()">Edit</button>
+        </div>
+      </div>
+    </form>
+</div>
