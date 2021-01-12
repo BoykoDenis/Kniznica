@@ -20,6 +20,9 @@ import { SharedModule } from './shared/shared.module';
 // Added Users
 import { UsersService } from './users/users.service';
 
+// Add auth form
+import { LoginService } from './login/login.service';
+
 import { StoreService } from 'ngx-jsonapi/sources/store.service';
 import { JsonRipper } from 'ngx-jsonapi/services/json-ripper';
 
@@ -29,8 +32,12 @@ import { FormsModule } from '@angular/forms';
 const appRoutes: Routes = [
     {
         path: '',
-        redirectTo: '/authors',
+        redirectTo: '/login',
         pathMatch: 'full'
+    },
+    {
+        path: 'login',
+        loadChildren: './login/login.module#LoginModule'
     },
     {
         path: 'authors',
@@ -70,6 +77,9 @@ const appRoutes: Routes = [
             useClass: AuthInterceptor,
             multi: true,
         },
+
+        // Add auth form
+        LoginService,
 
         AuthorsService,
         BooksService,

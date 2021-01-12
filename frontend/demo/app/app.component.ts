@@ -11,6 +11,7 @@ import { FormControl } from '@angular/forms';
 })
 export class AppComponent /* implements OnInit */ {
     public loading = '';
+    public authMode = 10;
 
     public constructor(
         private jsonapiCore: JsonapiCore
