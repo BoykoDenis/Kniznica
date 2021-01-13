@@ -24,6 +24,9 @@ export class UserComponent {
         private router: Router,
         private route: ActivatedRoute
     ) {
+        // create empty empty before load one to avoid errors during loading
+        this.user = this.usersService.new();
+
         route.params.subscribe(({ id }) => {
           // Add processing id = 0 for add new records
           if ( id > 0 ) {
@@ -36,7 +39,6 @@ export class UserComponent {
                 error => console.error('Could not load user.', error)
             );
           } else {
-              this.user = this.usersService.new();
               console.log('New user created');
               this.isEditMode = true;
           }

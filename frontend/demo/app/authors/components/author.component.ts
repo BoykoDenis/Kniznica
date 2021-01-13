@@ -31,6 +31,8 @@ export class AuthorComponent {
         private router: Router,
         private route: ActivatedRoute
     ) {
+        // create empty author before load one to avoid errors during loading
+        this.author = this.authorsService.new();
         route.params.subscribe(({ id }) => {
           // Add processing id = 0 for add new records
           if ( id > 0 ) {
@@ -42,7 +44,6 @@ export class AuthorComponent {
                 error => console.error('Could not load author.', error)
             );
           } else {
-              this.author = this.authorsService.new();
               console.log('New author created');
               this.isEditMode = true;
           }

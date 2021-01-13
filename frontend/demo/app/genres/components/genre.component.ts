@@ -24,6 +24,9 @@ export class GenreComponent {
         private router: Router,
         private route: ActivatedRoute
     ) {
+        // create empty genre before load one to avoid errors during loading
+        this.genre = this.genresService.new();
+
         route.params.subscribe(({ id }) => {
           // Add processing id = 0 for add new records
           if ( id > 0 ) {
@@ -35,7 +38,6 @@ export class GenreComponent {
                 error => console.error('Could not load genre.', error)
             );
           } else {
-              this.genre = this.genresService.new();
               console.log('New genre created');
               this.isEditMode = true;
           }

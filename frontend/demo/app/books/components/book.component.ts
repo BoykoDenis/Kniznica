@@ -31,6 +31,9 @@ export class BookComponent {
         private router: Router,
         private route: ActivatedRoute
     ) {
+        // create empty book before load one to avoid errors during loading
+        this.book = this.booksService.new();
+
         route.params.subscribe(({ id }) => {
           // Add processing id = 0 for add new records
           if ( id > 0 ) {
@@ -42,7 +45,6 @@ export class BookComponent {
                 error => console.log('error books controll', error)
             );
           } else {
-              this.book = this.booksService.new();
               console.log('New book created');
               this.isEditMode = true;
           }
