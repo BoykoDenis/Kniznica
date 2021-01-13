@@ -138,6 +138,7 @@ export class BookComponent {
             this.book.save( { include: ['genres'] } );
             console.log('removeRelationship save with genres include', this.book.toObject());
         }
+        return false;
     }
 
     public addAuthor() {
@@ -145,7 +146,7 @@ export class BookComponent {
         let newauthorid = prompt('Link to author (id):', '');
         if ( !newauthorid || parseInt(newauthorid) < 1 )
         {
-            return;
+            return false;
         }
         newauthorid = ''+parseInt(newauthorid)
         this.authorsService.get(newauthorid).subscribe(
@@ -159,6 +160,7 @@ export class BookComponent {
                 },
                 error => alert('Cannot find author with id:'+newauthorid)
             );
+        return false;
     }
 
     public removeAuthor( author: Resource ) {
@@ -167,6 +169,7 @@ export class BookComponent {
             this.book.save( { include: ['authors'] } );
             console.log('removeRelationship save with authors include', this.book.toObject());
         }
+        return false;
     }
 
 
@@ -183,7 +186,5 @@ export class BookComponent {
         );
         genres$.toPromise().then(success => console.log('genres loaded PROMISE'));
     }
-
-
 
 }

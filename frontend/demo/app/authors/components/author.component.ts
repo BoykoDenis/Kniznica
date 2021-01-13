@@ -83,7 +83,7 @@ export class AuthorComponent {
         let newbookid = prompt('Link to book (id):', '');
         if ( !newbookid || parseInt(newbookid) < 1 )
         {
-            return;
+            return false;
         }
         newbookid = ''+parseInt(newbookid)
         this.booksService.get(newbookid).subscribe(
@@ -97,6 +97,7 @@ export class AuthorComponent {
                 },
                 error => alert('Cannot find book with id:'+newbookid)
             );
+        return false;
     }
 
     public removeBook( book: Resource ) {
@@ -105,6 +106,7 @@ export class AuthorComponent {
             this.author.save( { include: ['books'] } );
             console.log('removeRelationship save with photos include', this.author.toObject());
         }
+        return false;
     }
 
     public turnEditMode( mode: boolean ) {

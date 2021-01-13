@@ -21,7 +21,7 @@
             <a [routerLink]="['/genres', genre.id]">{{ genre.attributes.gname }}</a>
         </td>
         <td class="text-right">
-            <a (click)="delete(genre)" title="Delele genre"><small>DELETE</small></a>
+            <a (click)="delete(genre)" href='#' title="Delele genre"><small>DELETE</small></a>
         </td>
     </tr>
 </table>

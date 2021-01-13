@@ -36,5 +36,6 @@ export class UsersComponent {
     public delete(user: Resource) {
         if ( confirm( 'Are you sure to delete user: ' + user.attributes.name ) )
             this.usersService.delete(user.id);
+        return false;
     }
 }

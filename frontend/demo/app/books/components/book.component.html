@@ -1,7 +1,7 @@
 <table class="table table-condensed">
     <tr>
         <td>
-<h3 *ngIf="book.id > 0">{{ book.attributes.title }}</h3>
+<h3 *ngIf="book.id > 0">Book: {{ book.attributes.title }}</h3>
 <h3 *ngIf="book.id == 0">Add new book</h3>
         </td>
         <td class="text-right"><a routerLink="/books">Return to Books List</a></td>
@@ -64,7 +64,7 @@
 <h4>
 Genres:
 <span *ngFor="let genre of book.relationships.genres.data" style="margin-left:5px" class="label label-default">&nbsp;{{ genre.attributes.gname }}&nbsp;
-<a (click)="removeGenre(genre)" title="Remove genre from book" style="color: white">&nbsp;&nbsp;&nbsp;X&nbsp;</a>
+<a (click)="removeGenre(genre)" href='#' title="Remove genre from book" style="color: white">&nbsp;&nbsp;&nbsp;X&nbsp;</a>
 </span>
 </h4>
         </td>
@@ -91,7 +91,7 @@ Add Genre
 <h4>
 Authors:
 <span *ngFor="let author of book.relationships.authors.data" style="margin-left:5px" class="label label-default">&nbsp;{{ author.attributes.name }}&nbsp;
-<a (click)="removeAuthor(author)" title="Remove Author from book" style="color: white">&nbsp;&nbsp;&nbsp;X&nbsp;</a>
+<a (click)="removeAuthor(author)" href='#' title="Remove Author from book" style="color: white">&nbsp;&nbsp;&nbsp;X&nbsp;</a>
 </span>
 </h4>
         </td>

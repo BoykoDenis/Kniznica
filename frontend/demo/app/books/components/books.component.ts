@@ -63,5 +63,6 @@ export class BooksComponent {
     public delete(book: Resource) {
         if ( confirm( 'Are you sure to delete book: ' + book.attributes.title ) )
             this.booksService.delete(book.id);
+        return false;
     }
 }

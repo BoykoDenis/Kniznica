@@ -36,5 +36,6 @@ export class GenresComponent {
     public delete(genre: Resource) {
         if ( confirm( 'Are you sure to delete genre: ' + genre.attributes.gname ) )
             this.genresService.delete(genre.id);
+        return false;
     }
 }

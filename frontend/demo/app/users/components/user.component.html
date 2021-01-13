@@ -1,7 +1,7 @@
 <table class="table table-condensed">
     <tr>
         <td>
-<h3 *ngIf="user.id > 0">{{ user.attributes.uname }}</h3>
+<h3 *ngIf="user.id > 0">User: {{ user.attributes.uname }}</h3>
 <h3 *ngIf="user.id == 0">Add new user</h3>
         </td>
         <td class="text-right"><a routerLink="/users">Return to Users List</a></td>

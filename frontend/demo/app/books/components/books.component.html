@@ -33,7 +33,7 @@
             <span *ngFor="let photo of book.relationships.photos.data">{{ photo.id }}, </span>
         </td>
         <td class="text-right">
-            <a (click)="delete(book)" title="Delele book"><small>DELETE</small></a>
+            <a (click)="delete(book)" href='#' title="Delele book"><small>DELETE</small></a>
         </td>
 
     </tr>
