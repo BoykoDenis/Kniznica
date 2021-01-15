@@ -78,7 +78,7 @@ class UserResource extends AbstractResource
         $query = $db::$dbh->prepare($req);
         try
         {
-            $query->execute( [$rawdata['uname'], $rawdata['uemail'], $rawdata['upass'], $rawdata['privilages'], $id]);
+            $query->execute( [$rawdata['uname'], $rawdata['uemail'], $rawdata['upass'], $rawdata['privileges'], $id]);
         }
         catch (Exception $e)
         {
