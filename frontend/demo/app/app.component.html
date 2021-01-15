@@ -1,28 +1,34 @@
 <main>
+<table class="table table-condensed" style='margin-bottom: 0px;'>
+    <tr>
+        <td>
     <h1>
         Example project
         <small class="bg-primary" *ngIf="loading">{{ loading }} <img src="http://s.ytimg.com/yt/img/loader-vflff1Mjj.gif" /></small>
     </h1>
+        </td>
+        <td class="text-right align-bottom">
+            <span *ngIf="auth.id != ''"><h4 style='margin-bottom: 0px;margin-top: 20px;'>
+              &nbsp;{{ auth.attributes.uname }}</h4>
+              <a (click)="logout()" href='#'>Logout</a>
+            </span>
+        </td>
+    </tr>
+</table>
 
     <nav>
         <ul class="nav nav-pills pull-xs-right">
-            <li class="nav-item" *ngIf="authMode > 0">
-                <a class="nav-link" routerLink="/login">Login</a>
-            </li>
-            <li class="nav-item" *ngIf="authMode > 0">
+            <li class="nav-item" *ngIf="auth.attributes.privileges > 0">
                 <a class="nav-link" routerLink="/authors">Authors</a>
             </li>
-            <li class="nav-item" *ngIf="authMode > 0">
+            <li class="nav-item" *ngIf="auth.attributes.privileges > 0">
                 <a class="nav-link" routerLink="/books">Books</a>
             </li>
-            <li class="nav-item" *ngIf="authMode > 0">
+            <li class="nav-item" *ngIf="auth.attributes.privileges > 0">
                 <a class="nav-link" routerLink="/genres">Genres</a>
             </li>
-            <li class="nav-item" *ngIf="authMode >= 10">
+            <li class="nav-item" *ngIf="auth.attributes.privileges >= 10">
                 <a class="nav-link" routerLink="/users">Users</a>
-            </li>
-            <li class="nav-item" *ngIf="authMode > 0">
-                <a class="nav-link" routerLink="/login">Logout</a>
             </li>
         </ul>
     </nav>

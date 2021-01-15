@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 // Add Router to be able to navigate from code (this.router.navigate(...)
 import { ActivatedRoute, Router } from '@angular/router';
 import { Resource } from 'ngx-jsonapi';
@@ -7,6 +7,8 @@ import { Output, EventEmitter } from '@angular/core';
 
 // Add Form control
 import { FormControl, NgForm } from '@angular/forms';
+
+import { AppComponent } from './../../app.component';
 
 @Component({
     selector: 'demo-login',
@@ -19,10 +21,17 @@ export class LoginComponent {
 
     public constructor(
         protected loginService: LoginService,
+        // call app
+        @Inject(AppComponent) protected app: AppComponent,
         // init router
         private router: Router,
         private route: ActivatedRoute
     ) {
+        // Reset current auth mode
+        this.app.authMode = 0;
+        // create empty author before load one to avoid errors during loading
+        this.login = this.loginService.new();
+        // Use current timestamp to avoid caching initial call
         const curtm = new Date();
         route.params.subscribe(({ id }) => {
           loginService.get( ''+curtm.getTime(), { ttl: 100 }).subscribe(
@@ -50,6 +59,7 @@ export class LoginComponent {
         console.log('login data for save ', this.login.toObject());
         this.login.save().subscribe(success => {
             console.log('session initialized', this.login.toObject());
+            this.app.authMode = 10;
             this.router.navigate(['/authors']);
         });
     }

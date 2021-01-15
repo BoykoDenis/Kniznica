@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 
 // Add cookie sending
-import { AuthInterceptor } from './services/auth.interceptor';
+import { AuthInterceptor } from './auth/auth.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { HttpClientModule } from '@angular/common/http';
@@ -21,7 +21,10 @@ import { SharedModule } from './shared/shared.module';
 import { UsersService } from './users/users.service';
 
 // Add auth form
-import { LoginService } from './login/login.service';
+import { AuthService } from './auth/auth.service';
+
+// Add loading component
+import { LoadingComponent } from './services/loading.component';
 
 import { StoreService } from 'ngx-jsonapi/sources/store.service';
 import { JsonRipper } from 'ngx-jsonapi/services/json-ripper';
@@ -32,12 +35,13 @@ import { FormsModule } from '@angular/forms';
 const appRoutes: Routes = [
     {
         path: '',
-        redirectTo: '/login',
+//        redirectTo: '/auth',
+        component: LoadingComponent,
         pathMatch: 'full'
     },
     {
-        path: 'login',
-        loadChildren: './login/login.module#LoginModule'
+        path: 'auth',
+        loadChildren: './auth/auth.module#AuthModule'
     },
     {
         path: 'authors',
@@ -79,7 +83,7 @@ const appRoutes: Routes = [
         },
 
         // Add auth form
-        LoginService,
+        AuthService,
 
         AuthorsService,
         BooksService,
@@ -102,7 +106,8 @@ const appRoutes: Routes = [
         // Add forms
         FormsModule
     ],
-    declarations: [AppComponent],
+
+    declarations: [AppComponent, LoadingComponent],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

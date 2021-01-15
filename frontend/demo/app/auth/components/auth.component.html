@@ -1,0 +1,32 @@
+<div>
+    <h3>Login</h3>
+</div>
+
+<demo-resource-info [resource]="auth"></demo-resource-info>
+
+<div class="container">
+    <form #authForm="ngForm" (ngSubmit)="onFormSubmit(authForm)" class="form-horizontal">
+      <div class="form-group">
+        <label for="authname" class="col-lg-2 control-label">User email:</label>
+        <div class="col-lg-10">
+          <input type="text" class="form-control" id="uemail" required
+        	[(ngModel)]="auth.attributes.uemail" name="uemail"
+        	#uemail="ngModel" style="width: 240px">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password" class="col-lg-2 control-label">Password:</label>
+        <div class="col-lg-10">
+          <input type="password" class="form-control" id="upass" required
+        	[(ngModel)]="auth.attributes.upass" name="upass"
+        	#upass="ngModel" style="width: 240px">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+          <button type="submit" class="btn btn-success">Login</button>
+        </div>
+      </div>
+    </form>
+</div>
+

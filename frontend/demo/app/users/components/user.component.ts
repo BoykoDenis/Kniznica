@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Resource } from 'ngx-jsonapi';
 import { UsersService, User } from './../users.service';
+import { AuthService } from './../../auth/auth.service';
 
 // Add Form control
 import { FormControl, NgForm } from '@angular/forms';
@@ -19,6 +20,7 @@ export class UserComponent {
     public isValidFormSubmitted: boolean  = true;
 
     public constructor(
+        protected authService: AuthService,
         protected usersService: UsersService,
         // init router
         private router: Router,
@@ -71,7 +73,7 @@ export class UserComponent {
 
         this.user.attributes.uname = form.value.uname;
         this.user.attributes.uemail = form.value.uemail;
-        this.user.attributes.upass = form.value.upass;
+        this.user.attributes.upass = this.authService.MD5(form.value.upass);
         this.user.attributes.privileges = form.value.privileges;
         console.log('user data for save ', this.user.toObject());
         this.user.save().subscribe(success => {
