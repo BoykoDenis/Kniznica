@@ -1,5 +1,9 @@
 <?php
 return [
+    "Admin" => [
+        "User" => "admin",
+        "Password" => "Kniznica",
+    ],
     "DB" => [
         "DSN" => "mysql:host=gpe;dbname=boykovolf",
         "User" => "root",

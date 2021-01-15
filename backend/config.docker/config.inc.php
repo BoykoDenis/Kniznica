@@ -5,16 +5,14 @@
  */
 
 return [
+    "Admin" => [
+        "User" => "admin",
+        "Password" => "Kniznica",
+    ],
     "DB" => [
-/*
-        "DSN" => "mysql:host=localhost;dbname=mydb",
-        "User" => "mysqluser",
-        "Password" => "mysqlpswd",
-*/
         "DSN" => "mysql:host=db.srv;dbname=kniznica",
         "User" => "kniznica",
         "Password" => "MySQL",
-
     ],
     "View" => [
         "RowsOnPage" => 5,

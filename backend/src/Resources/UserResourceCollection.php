@@ -31,13 +31,29 @@ class UserResourceCollection extends AbstractResourceCollection
 
     protected function loadFromDB( $query = null ): ResourceCollectionInterface
     {
-		if ( $query )
+        $filter = [];
+        if ( is_string($query) )
         {
             $req = $query;
         }
         else
         {
             $req = 'SELECT * FROM users';
+
+            if ( \is_array( $query ) )
+            {
+                 if ( strlen($query['uname']) )
+                     $filter['uname'] = $query['uname'];
+            }
+            if ( \count($filter) )
+            {
+                $div = 'where';
+                foreach( $filter as $fld=>$val )
+                {
+                    $req .= " {$div} {$fld} = :{$fld}";
+                    $div = 'and';
+                }
+            }
 
             if ( $this->limit() )
             {
@@ -49,7 +65,13 @@ class UserResourceCollection extends AbstractResourceCollection
             }
         }
         $query = App::$dbh->prepare($req);
-		$query->execute();
+        if ( \count($filter) )
+        {
+            foreach( $filter as $fld=>$val )
+                $query->bindValue(":{$fld}", $val);
+        }
+
+        $query->execute();
 
         while($row = $query->fetch(\PDO::FETCH_ASSOC))
         {
