@@ -1,5 +1,13 @@
 # Kniznica
 
+## Quick start
+
+Run docker compose with the following parameters to build container cluster in production mode.
+
+```bash
+docker-compose up -d
+```
+
 ## General
 
 Admin credentials:
@@ -91,12 +99,3 @@ In development mode backend stores logs to the following directories
 
 - Apache: .docker/backend/log/apache2
 - PHP: .docker/backend/log/php
-
-
-### Production
-
-Run docker compose with the following parameters to build container cluster in production mode.
-
-```bash
-docker-compose up -d
-```
