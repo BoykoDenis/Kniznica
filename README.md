@@ -1,5 +1,32 @@
 # Kniznica
 
+## General
+
+Admin credentials:
+
+login: admin
+password: kniznica
+
+==================
+
+Functionality:
+ - List of:
+  - Books
+  - Authors
+  - Genres
+ - Relationships
+  - Authors <-> Books
+  - Authors <-> Genres
+  - Books <-> Genres
+  
+User permissions:
+ - add/remove/edit resources (authors, books, genres)
+ - add/remove/edit relationships (aforementioned relationships)
+  
+Admin permissions:
+ - User permissions
+ - Add users
+  
 ## Back-end
 
 ## Front-end
