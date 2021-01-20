@@ -11,13 +11,13 @@ password: kniznica
 
 Functionality:
  - List of:
-  - Books
-  - Authors
-  - Genres
+    - Books
+    - Authors
+    - Genres
  - Relationships
-  - Authors <-> Books
-  - Authors <-> Genres
-  - Books <-> Genres
+    - Authors <-> Books
+    - Authors <-> Genres
+    - Books <-> Genres
   
 User permissions:
  - add/remove/edit resources (authors, books, genres)
