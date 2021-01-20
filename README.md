@@ -44,11 +44,23 @@ Please follow the instruction at https://docs.docker.com/docker-for-windows/wsl.
 The docker-compose.dev.yml file overrides the standard docker compose
 settings (in docker-compose.dev.yml) with development environment parameters
 
+#### Before build containers
+
+After downloading project files from github please
+*delete file .docker/mysql.dev/storage/README.md*. So the directory
+.docker/mysql.dev/storage/ should be empty.  This directory will contain
+database files.
+
+#### Containers building
 Run docker compose with the following parameters to build container cluster in development mode.
 
 ```bash
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 ```
+
+After that connect to MySQL DB server using credentials dev:mysql
+and run the script .docker/mysql/initdb/init_db.sql to create database.
+
 #### Front-end
 
 Access to front-end API: http://localhost:4200
