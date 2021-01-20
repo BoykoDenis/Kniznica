@@ -4,8 +4,8 @@
 
 Admin credentials:
 
-login: admin
-password: kniznica
+- login: admin
+- password: kniznica
 
 ==================
 
